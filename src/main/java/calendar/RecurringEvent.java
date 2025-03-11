@@ -38,8 +38,8 @@ public class RecurringEvent extends AbstractEvent {
 
 
 
-  public boolean isConflicted(EventInterface otherEvent1) {
-    RecurringEvent otherEvent = (RecurringEvent) otherEvent1;
+  public boolean isConflicted(EventInterface otherEvent) {
+    //RecurringEvent otherEvent = (RecurringEvent) otherEvent1;
     if (otherEvent == null) {
       return false;
     }

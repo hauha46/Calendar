@@ -7,6 +7,7 @@ public interface EventInterface {
 
   public String getSubject();
 
+  
   public LocalDateTime getStartTime();
 
   public LocalDateTime getEndTime();
