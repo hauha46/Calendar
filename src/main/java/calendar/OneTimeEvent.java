@@ -3,7 +3,7 @@ package calendar;
 import java.time.LocalDateTime;
 
 /**
- * The class for Single Event object
+ * The class for Single Event object.
  */
 public class OneTimeEvent extends AbstractSingleEvent {
 

@@ -7,7 +7,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * The class for managing events in a calendar. The main attribute is calendar, which stores events
@@ -22,7 +28,7 @@ public class Calendar {
   private boolean autoDeclineConflicts = false;
 
   /**
-   * Construct a calendar with a new instance of TreeMap
+   * Construct a calendar with a new instance of TreeMap.
    */
   public Calendar() {
     calendar = new TreeMap<>(Comparator.naturalOrder());
@@ -76,8 +82,8 @@ public class Calendar {
     }
 
     for (EventInterface event : events) {
-      calendar.computeIfAbsent(event.getStartTime().toLocalDate(),
-              k -> new HashSet<>()).add(event);
+      calendar.computeIfAbsent(
+              event.getStartTime().toLocalDate(), k -> new HashSet<>()).add(event);
     }
   }
 
@@ -105,8 +111,8 @@ public class Calendar {
     }
 
     for (EventInterface event : events) {
-      calendar.computeIfAbsent(event.getStartTime().toLocalDate(),
-              k -> new HashSet<>()).add(event);
+      calendar.computeIfAbsent(
+              event.getStartTime().toLocalDate(), k -> new HashSet<>()).add(event);
     }
   }
 
@@ -177,6 +183,9 @@ public class Calendar {
           newDescription = newValue;
           break;
         }
+        default: {
+          throw new IllegalArgumentException("Unsupported property");
+        }
       }
 
       try {
@@ -242,6 +251,9 @@ public class Calendar {
           newOccurrences = Integer.parseInt(newValue);
           break;
         }
+        default: {
+          throw new IllegalArgumentException("Unsupported property");
+        }
       }
       try {
         addRecurringEvents(newSubject, newDescription, newStartTime, newEndTime, newEndRecurring,
@@ -270,7 +282,8 @@ public class Calendar {
         System.out.println("Date: " + dateFormatter.format(currentDate));
         for (EventInterface event : calendar.get(currentDate)) {
           if ((event.getStartTime().isEqual(startTime) || event.getStartTime().isAfter(startTime))
-                  && (event.getEndTime().isEqual(endTime) || event.getEndTime().isBefore(endTime))) {
+                  && (event.getEndTime().isEqual(endTime) || event.getEndTime().isBefore(endTime)))
+          {
             System.out.println("  -Subject :  " + event.getSubject());
             System.out.println("  -Description :  " + event.getDescription());
             System.out.println("  -Start Time :  " + event.getStartTime());
@@ -278,9 +291,6 @@ public class Calendar {
           }
         }
       }
-//      else {
-//        System.out.println("No events on: " + dateFormatter.format(currentDate));
-//      }
       currentDate = currentDate.plusDays(1);
     }
   }
@@ -352,7 +362,8 @@ public class Calendar {
    * @param endTime   the given end time.
    * @return the found event.
    */
-  private EventInterface searchEvent(String subject, LocalDateTime startTime, LocalDateTime endTime) {
+  private EventInterface searchEvent(String subject, LocalDateTime startTime, LocalDateTime endTime)
+  {
     for (Map.Entry<LocalDate, Set<EventInterface>> entry : calendar.entrySet()) {
       Set<EventInterface> events = entry.getValue();
       for (EventInterface event : events) {

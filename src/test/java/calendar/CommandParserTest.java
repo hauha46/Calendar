@@ -3,10 +3,15 @@ package calendar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
  * A JUnit test class for the Command Parser class.
@@ -57,12 +62,12 @@ class CommandParserTest {
 
   @Test
   void testCreateSingleEventAutoDeclined() {
-    String createCommand = "create event --autoDecline Meeting from 2023-10-10T09:00 to " +
-            "2023-10-10T10:00";
+    String createCommand =
+            "create event --autoDecline Meeting from 2023-10-10T09:00 to 2023-10-10T10:00";
     assertDoesNotThrow(() -> commandParser.parseCommand(createCommand));
 
-    String conflictCommand = "create event --autoDecline Conflict from 2023-10-10T09:30 to " +
-            "2023-10-10T10:30";
+    String conflictCommand =
+            "create event --autoDecline Conflict from 2023-10-10T09:30 to 2023-10-10T10:30";
     Exception exception = assertThrows(IllegalArgumentException.class,
             () -> commandParser.parseCommand(conflictCommand));
     assertEquals("Conflicted event and auto-decline is enabled.", exception.getMessage());
@@ -104,8 +109,9 @@ class CommandParserTest {
     String createCommand = "create event Workshop from 2023-10-11T14:00 to 2023-10-11T16:00";
     assertDoesNotThrow(() -> commandParser.parseCommand(createCommand));
 
-    String editCommand = "edit event name Workshop from 2023-10-11T14:00 to 2023-10-11T16:00 " +
-            "with UpdatedWorkshop";
+    String editCommand =
+            "edit event name Workshop from 2023-10-11T14:00 to 2023-10-11T16:00 "
+                    + "with UpdatedWorkshop";
     assertDoesNotThrow(() -> commandParser.parseCommand(editCommand));
 
     String printCommand = "print events on 2023-10-11";
@@ -124,8 +130,9 @@ class CommandParserTest {
     String createCommand = "create event Meeting from 2023-10-10T09:00 to 2023-10-10T10:00";
     assertDoesNotThrow(() -> commandParser.parseCommand(createCommand));
 
-    String editCommand = "edit event startTime Meeting from 2023-10-10T09:00 to 2023-10-10T10:00 " +
-            "with 2023-10-10T09:30";
+    String editCommand =
+            "edit event startTime Meeting from 2023-10-10T09:00 to 2023-10-10T10:00 "
+                    + "with 2023-10-10T09:30";
     assertDoesNotThrow(() -> commandParser.parseCommand(editCommand));
 
     String printCommand = "print events on 2023-10-10";
@@ -139,8 +146,9 @@ class CommandParserTest {
     String createCommand = "create event Meeting from 2023-10-10T09:00 to 2023-10-10T10:00";
     assertDoesNotThrow(() -> commandParser.parseCommand(createCommand));
 
-    String editCommand = "edit event endTime Meeting from 2023-10-10T09:00 to 2023-10-10T10:00 " +
-            "with 2023-10-10T11:00";
+    String editCommand =
+            "edit event endTime Meeting from 2023-10-10T09:00 to 2023-10-10T10:00 "
+                    + "with 2023-10-10T11:00";
     assertDoesNotThrow(() -> commandParser.parseCommand(editCommand));
 
     String printCommand = "print events on 2023-10-10";
@@ -154,8 +162,8 @@ class CommandParserTest {
     String createCommand = "create event Meeting from 2023-10-10T09:00 to 2023-10-10T10:00";
     assertDoesNotThrow(() -> commandParser.parseCommand(createCommand));
 
-    String editCommand = "edit event description Meeting from 2023-10-10T09:00 to " +
-            "2023-10-10T10:00 with Weekly";
+    String editCommand =
+            "edit event description Meeting from 2023-10-10T09:00 to 2023-10-10T10:00 with Weekly";
     assertDoesNotThrow(() -> commandParser.parseCommand(editCommand));
 
     String printCommand = "print events on 2023-10-10";
@@ -170,8 +178,9 @@ class CommandParserTest {
     String createCommand = "create event Meeting from 2023-10-10T09:00 to 2023-10-10T10:00";
     assertDoesNotThrow(() -> commandParser.parseCommand(createCommand));
 
-    String editCommand = "edit event locationABC Meeting from 2023-10-10T09:00 to " +
-            "2023-10-10T10:00 with Conference";
+    String editCommand =
+            "edit event locationABC Meeting from 2023-10-10T09:00 to 2023-10-10T10:00 "
+                    + "with Conference";
     assertDoesNotThrow(() -> commandParser.parseCommand(editCommand));
 
     String printCommand = "print events on 2023-10-10";
@@ -188,8 +197,9 @@ class CommandParserTest {
 
   @Test
   void testEditSingleEventNonExistentEvent() {
-    String editCommand = "edit event name NonExistentEvent from 2023-10-11T14:00 to " +
-            "2023-10-11T16:00 with UpdatedName";
+    String editCommand =
+            "edit event name NonExistentEvent from 2023-10-11T14:00 to 2023-10-11T16:00 "
+                    + "with UpdatedName";
     assertDoesNotThrow(() -> commandParser.parseCommand(editCommand));
 
     String printCommand = "print events on 2023-10-11";
@@ -203,8 +213,8 @@ class CommandParserTest {
     String createSingleCommand = "create event Meeting from 2023-10-10T09:00 to 2023-10-10T10:00";
     assertDoesNotThrow(() -> commandParser.parseCommand(createSingleCommand));
 
-    String createRecurringCommand = "create event Standup from 2023-10-10T09:00 to " +
-            "2023-10-10T09:30 repeats TR for 5";
+    String createRecurringCommand =
+            "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats TR for 5";
     Exception exception = assertThrows(IllegalArgumentException.class,
             () -> commandParser.parseCommand(createRecurringCommand));
     assertEquals("Recurring event series conflicts with existing events.",
@@ -223,8 +233,8 @@ class CommandParserTest {
 
   @Test
   void testCreateRecurringEventForNTimes() {
-    String input = "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats " +
-            "MWF for 5";
+    String input =
+            "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats MWF for 5";
     assertDoesNotThrow(() -> commandParser.parseCommand(input));
 
     String printCommand = "print events from 2023-10-10T00:00 to 2023-10-20T23:59";
@@ -306,8 +316,9 @@ class CommandParserTest {
 
   @Test
   void testCreateRecurringAllDays() {
-    String input = "create event DailyCheck from 2023-10-16T09:00 to 2023-10-16T09:30 repeats " +
-            "MTWRFSU for 7";
+    String input =
+            "create event DailyCheck from 2023-10-16T09:00 to 2023-10-16T09:30 repeats MTWRFSU "
+                    + "for 7";
     assertDoesNotThrow(() -> commandParser.parseCommand(input));
 
     String printCommand = "print events from 2023-10-16T00:00 to 2023-10-22T23:59";
@@ -325,8 +336,8 @@ class CommandParserTest {
 
   @Test
   void testEditRecurringEvent() {
-    String createCommand = "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 " +
-            "repeats MWF for 5";
+    String createCommand =
+            "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats MWF for 5";
     assertDoesNotThrow(() -> commandParser.parseCommand(createCommand));
 
     String editCommand = "edit events description Standup NewDescription";
@@ -365,8 +376,9 @@ class CommandParserTest {
 
   @Test
   void testEditFractionOfRecurringEvents() {
-    String createCommand = "create event Review from 2023-10-10T10:00 to 2023-10-10T11:00 " +
-            "repeats TR until 2023-10-31";
+    String createCommand =
+            "create event Review from 2023-10-10T10:00 to 2023-10-10T11:00 repeats TR "
+                    + "until 2023-10-31";
     assertDoesNotThrow(() -> commandParser.parseCommand(createCommand));
 
     String editCommand = "edit events name Review from 2023-10-17T10:00 with NewName";
@@ -415,12 +427,12 @@ class CommandParserTest {
 
   @Test
   void testEditRecurringEventStartTime() {
-    String createCommand = "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 " +
-            "repeats MWF for 5";
+    String createCommand =
+            "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats MWF for 5";
     assertDoesNotThrow(() -> commandParser.parseCommand(createCommand));
 
-    String editCommand = "edit events startTime Standup from 2023-10-10T09:00 with " +
-            "2023-10-10T09:15";
+    String editCommand =
+            "edit events startTime Standup from 2023-10-10T09:00 with 2023-10-10T09:15";
     assertDoesNotThrow(() -> commandParser.parseCommand(editCommand));
 
     String printCommand = "print events from 2023-10-10T00:00 to 2023-10-20T23:59";
@@ -433,8 +445,8 @@ class CommandParserTest {
 
   @Test
   void testEditRecurringEventOccurrences() {
-    String createCommand = "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 " +
-            "repeats MWF for 3";
+    String createCommand =
+            "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats MWF for 3";
     assertDoesNotThrow(() -> commandParser.parseCommand(createCommand));
 
     String editCommand = "edit events occurrences Standup 5";
@@ -454,8 +466,8 @@ class CommandParserTest {
 
   @Test
   void testEditRecurringEventRecurringDays() {
-    String createCommand = "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 " +
-            "repeats TR for 5";
+    String createCommand =
+            "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats TR for 5";
     assertDoesNotThrow(() -> commandParser.parseCommand(createCommand));
 
     String editCommand = "edit events recurringDays Standup MWF";
@@ -574,8 +586,8 @@ class CommandParserTest {
 
   @Test
   void testCreateEventRecurringWithInvalidDays() {
-    String input = "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 " +
-            "repeats XYZ for 5";
+    String input =
+            "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats XYZ for 5";
     Exception exception = assertThrows(IllegalArgumentException.class,
             () -> commandParser.parseCommand(input));
     assertTrue(exception.getMessage().contains("Invalid day character"));
@@ -591,8 +603,8 @@ class CommandParserTest {
 
   @Test
   void testEditEventMissingWithKeyword() {
-    String input = "edit event name Meeting from 2023-10-10T09:00 to 2023-10-10T10:00 " +
-            "UpdatedMeeting";
+    String input =
+            "edit event name Meeting from 2023-10-10T09:00 to 2023-10-10T10:00 UpdatedMeeting";
     Exception exception = assertThrows(IllegalArgumentException.class,
             () -> commandParser.parseCommand(input));
     assertEquals("Expected 'with' after end date/time.", exception.getMessage());
@@ -616,8 +628,8 @@ class CommandParserTest {
 
   @Test
   void testCommandWithExtraWhitespace() {
-    String command = "  create   event    Meeting   from    2023-10-10T09:00    to    " +
-            "2023-10-10T10:00  ";
+    String command =
+            "  create   event    Meeting   from    2023-10-10T09:00  to 2023-10-10T10:00  ";
     assertDoesNotThrow(() -> commandParser.parseCommand(command));
 
     String printCommand = "print events on 2023-10-10";

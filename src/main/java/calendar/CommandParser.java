@@ -14,7 +14,7 @@ public class CommandParser {
           DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
   /**
-   * Construct a Command Parser with a new instance of calendar
+   * Construct a Command Parser with a new instance of calendar.
    */
   public CommandParser() {
     calendar = new Calendar();

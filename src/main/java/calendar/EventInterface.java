@@ -35,7 +35,7 @@ public interface EventInterface {
   String getDescription();
 
   /**
-   * Check if the current event has conflict with another event
+   * Check if the current event has conflict with another event.
    *
    * @param otherEvent the other event that need to be checked if there are any conflicts
    * @return true if there is conflict, false if there isn't.
