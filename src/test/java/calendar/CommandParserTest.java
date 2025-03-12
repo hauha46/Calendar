@@ -68,8 +68,8 @@ class CommandParserTest {
 
     String conflictCommand =
             "create event --autoDecline Conflict from 2023-10-10T09:30 to 2023-10-10T10:30";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(conflictCommand));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(conflictCommand));
     assertEquals("Conflicted event and auto-decline is enabled.", exception.getMessage());
   }
 
@@ -186,11 +186,11 @@ class CommandParserTest {
     String printCommand = "print events on 2023-10-10";
     assertDoesNotThrow(() -> commandParser.parseCommand(printCommand));
 
-    String expectedOutput = "Date: 10/10/2023\n" +
-            "  -Subject :  Meeting\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-10T09:00\n" +
-            "  -End Time :  2023-10-10T10:00\n";
+    String expectedOutput = "Date: 10/10/2023\n"
+            + "  -Subject :  Meeting\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-10T09:00\n"
+            + "  -End Time :  2023-10-10T10:00\n";
     assertEquals(expectedOutput, outputStream.toString());
   }
 
@@ -215,19 +215,20 @@ class CommandParserTest {
 
     String createRecurringCommand =
             "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats TR for 5";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(createRecurringCommand));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(createRecurringCommand)
+    );
     assertEquals("Recurring event series conflicts with existing events.",
             exception.getMessage());
 
     String printCommand = "print events from 2023-10-10T00:00 to 2023-10-20T23:59";
     assertDoesNotThrow(() -> commandParser.parseCommand(printCommand));
 
-    String expectedOutput = "Date: 10/10/2023\n" +
-            "  -Subject :  Meeting\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-10T09:00\n" +
-            "  -End Time :  2023-10-10T10:00\n";
+    String expectedOutput = "Date: 10/10/2023\n"
+            + "  -Subject :  Meeting\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-10T09:00\n"
+            + "  -End Time :  2023-10-10T10:00\n";
     assertEquals(expectedOutput, outputStream.toString());
   }
 
@@ -240,31 +241,31 @@ class CommandParserTest {
     String printCommand = "print events from 2023-10-10T00:00 to 2023-10-20T23:59";
     assertDoesNotThrow(() -> commandParser.parseCommand(printCommand));
 
-    String expectedOutput = "Date: 10/11/2023\n" +
-            "  -Subject :  Standup\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-11T09:00\n" +
-            "  -End Time :  2023-10-11T09:30\n" +
-            "Date: 10/13/2023\n" +
-            "  -Subject :  Standup\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-13T09:00\n" +
-            "  -End Time :  2023-10-13T09:30\n" +
-            "Date: 10/16/2023\n" +
-            "  -Subject :  Standup\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-16T09:00\n" +
-            "  -End Time :  2023-10-16T09:30\n" +
-            "Date: 10/18/2023\n" +
-            "  -Subject :  Standup\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-18T09:00\n" +
-            "  -End Time :  2023-10-18T09:30\n" +
-            "Date: 10/20/2023\n" +
-            "  -Subject :  Standup\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-20T09:00\n" +
-            "  -End Time :  2023-10-20T09:30\n";
+    String expectedOutput = "Date: 10/11/2023\n"
+            + "  -Subject :  Standup\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-11T09:00\n"
+            + "  -End Time :  2023-10-11T09:30\n"
+            + "Date: 10/13/2023\n"
+            + "  -Subject :  Standup\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-13T09:00\n"
+            + "  -End Time :  2023-10-13T09:30\n"
+            + "Date: 10/16/2023\n"
+            + "  -Subject :  Standup\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-16T09:00\n"
+            + "  -End Time :  2023-10-16T09:30\n"
+            + "Date: 10/18/2023\n"
+            + "  -Subject :  Standup\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-18T09:00\n"
+            + "  -End Time :  2023-10-18T09:30\n"
+            + "Date: 10/20/2023\n"
+            + "  -Subject :  Standup\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-20T09:00\n"
+            + "  -End Time :  2023-10-20T09:30\n";
     assertEquals(expectedOutput, outputStream.toString());
   }
 
@@ -276,41 +277,41 @@ class CommandParserTest {
     String printCommand = "print events from 2023-10-10T00:00 to 2023-10-31T23:59";
     assertDoesNotThrow(() -> commandParser.parseCommand(printCommand));
 
-    String expectedOutput = "Date: 10/10/2023\n" +
-            "  -Subject :  Review\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-10T00:00\n" +
-            "  -End Time :  2023-10-10T23:59\n" +
-            "Date: 10/12/2023\n" +
-            "  -Subject :  Review\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-12T00:00\n" +
-            "  -End Time :  2023-10-12T23:59\n" +
-            "Date: 10/17/2023\n" +
-            "  -Subject :  Review\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-17T00:00\n" +
-            "  -End Time :  2023-10-17T23:59\n" +
-            "Date: 10/19/2023\n" +
-            "  -Subject :  Review\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-19T00:00\n" +
-            "  -End Time :  2023-10-19T23:59\n" +
-            "Date: 10/24/2023\n" +
-            "  -Subject :  Review\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-24T00:00\n" +
-            "  -End Time :  2023-10-24T23:59\n" +
-            "Date: 10/26/2023\n" +
-            "  -Subject :  Review\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-26T00:00\n" +
-            "  -End Time :  2023-10-26T23:59\n" +
-            "Date: 10/31/2023\n" +
-            "  -Subject :  Review\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-31T00:00\n" +
-            "  -End Time :  2023-10-31T23:59\n";
+    String expectedOutput = "Date: 10/10/2023\n"
+            + "  -Subject :  Review\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-10T00:00\n"
+            + "  -End Time :  2023-10-10T23:59\n"
+            + "Date: 10/12/2023\n"
+            + "  -Subject :  Review\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-12T00:00\n"
+            + "  -End Time :  2023-10-12T23:59\n"
+            + "Date: 10/17/2023\n"
+            + "  -Subject :  Review\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-17T00:00\n"
+            + "  -End Time :  2023-10-17T23:59\n"
+            + "Date: 10/19/2023\n"
+            + "  -Subject :  Review\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-19T00:00\n"
+            + "  -End Time :  2023-10-19T23:59\n"
+            + "Date: 10/24/2023\n"
+            + "  -Subject :  Review\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-24T00:00\n"
+            + "  -End Time :  2023-10-24T23:59\n"
+            + "Date: 10/26/2023\n"
+            + "  -Subject :  Review\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-26T00:00\n"
+            + "  -End Time :  2023-10-26T23:59\n"
+            + "Date: 10/31/2023\n"
+            + "  -Subject :  Review\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-31T00:00\n"
+            + "  -End Time :  2023-10-31T23:59\n";
     assertEquals(expectedOutput, outputStream.toString());
   }
 
@@ -346,31 +347,31 @@ class CommandParserTest {
     String printCommand = "print events from 2023-10-10T00:00 to 2023-10-20T23:59";
     assertDoesNotThrow(() -> commandParser.parseCommand(printCommand));
 
-    String expectedOutput = "Date: 10/11/2023\n" +
-            "  -Subject :  Standup\n" +
-            "  -Description :  NewDescription\n" +
-            "  -Start Time :  2023-10-11T09:00\n" +
-            "  -End Time :  2023-10-11T09:30\n" +
-            "Date: 10/13/2023\n" +
-            "  -Subject :  Standup\n" +
-            "  -Description :  NewDescription\n" +
-            "  -Start Time :  2023-10-13T09:00\n" +
-            "  -End Time :  2023-10-13T09:30\n" +
-            "Date: 10/16/2023\n" +
-            "  -Subject :  Standup\n" +
-            "  -Description :  NewDescription\n" +
-            "  -Start Time :  2023-10-16T09:00\n" +
-            "  -End Time :  2023-10-16T09:30\n" +
-            "Date: 10/18/2023\n" +
-            "  -Subject :  Standup\n" +
-            "  -Description :  NewDescription\n" +
-            "  -Start Time :  2023-10-18T09:00\n" +
-            "  -End Time :  2023-10-18T09:30\n" +
-            "Date: 10/20/2023\n" +
-            "  -Subject :  Standup\n" +
-            "  -Description :  NewDescription\n" +
-            "  -Start Time :  2023-10-20T09:00\n" +
-            "  -End Time :  2023-10-20T09:30\n";
+    String expectedOutput = "Date: 10/11/2023\n"
+            + "  -Subject :  Standup\n"
+            + "  -Description :  NewDescription\n"
+            + "  -Start Time :  2023-10-11T09:00\n"
+            + "  -End Time :  2023-10-11T09:30\n"
+            + "Date: 10/13/2023\n"
+            + "  -Subject :  Standup\n"
+            + "  -Description :  NewDescription\n"
+            + "  -Start Time :  2023-10-13T09:00\n"
+            + "  -End Time :  2023-10-13T09:30\n"
+            + "Date: 10/16/2023\n"
+            + "  -Subject :  Standup\n"
+            + "  -Description :  NewDescription\n"
+            + "  -Start Time :  2023-10-16T09:00\n"
+            + "  -End Time :  2023-10-16T09:30\n"
+            + "Date: 10/18/2023\n"
+            + "  -Subject :  Standup\n"
+            + "  -Description :  NewDescription\n"
+            + "  -Start Time :  2023-10-18T09:00\n"
+            + "  -End Time :  2023-10-18T09:30\n"
+            + "Date: 10/20/2023\n"
+            + "  -Subject :  Standup\n"
+            + "  -Description :  NewDescription\n"
+            + "  -Start Time :  2023-10-20T09:00\n"
+            + "  -End Time :  2023-10-20T09:30\n";
     assertEquals(expectedOutput, outputStream.toString());
   }
 
@@ -387,41 +388,41 @@ class CommandParserTest {
     String printCommand = "print events from 2023-10-10T00:00 to 2023-10-31T23:59";
     assertDoesNotThrow(() -> commandParser.parseCommand(printCommand));
 
-    String expectedOutput = "Date: 10/10/2023\n" +
-            "  -Subject :  Review\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-10T10:00\n" +
-            "  -End Time :  2023-10-10T11:00\n" +
-            "Date: 10/12/2023\n" +
-            "  -Subject :  Review\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-12T10:00\n" +
-            "  -End Time :  2023-10-12T11:00\n" +
-            "Date: 10/17/2023\n" +
-            "  -Subject :  NewName\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-17T10:00\n" +
-            "  -End Time :  2023-10-17T11:00\n" +
-            "Date: 10/19/2023\n" +
-            "  -Subject :  NewName\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-19T10:00\n" +
-            "  -End Time :  2023-10-19T11:00\n" +
-            "Date: 10/24/2023\n" +
-            "  -Subject :  NewName\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-24T10:00\n" +
-            "  -End Time :  2023-10-24T11:00\n" +
-            "Date: 10/26/2023\n" +
-            "  -Subject :  NewName\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-26T10:00\n" +
-            "  -End Time :  2023-10-26T11:00\n" +
-            "Date: 10/31/2023\n" +
-            "  -Subject :  NewName\n" +
-            "  -Description :  \n" +
-            "  -Start Time :  2023-10-31T10:00\n" +
-            "  -End Time :  2023-10-31T11:00\n";
+    String expectedOutput = "Date: 10/10/2023\n"
+            + "  -Subject :  Review\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-10T10:00\n"
+            + "  -End Time :  2023-10-10T11:00\n"
+            + "Date: 10/12/2023\n"
+            + "  -Subject :  Review\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-12T10:00\n"
+            + "  -End Time :  2023-10-12T11:00\n"
+            + "Date: 10/17/2023\n"
+            + "  -Subject :  NewName\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-17T10:00\n"
+            + "  -End Time :  2023-10-17T11:00\n"
+            + "Date: 10/19/2023\n"
+            + "  -Subject :  NewName\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-19T10:00\n"
+            + "  -End Time :  2023-10-19T11:00\n"
+            + "Date: 10/24/2023\n"
+            + "  -Subject :  NewName\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-24T10:00\n"
+            + "  -End Time :  2023-10-24T11:00\n"
+            + "Date: 10/26/2023\n"
+            + "  -Subject :  NewName\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-26T10:00\n"
+            + "  -End Time :  2023-10-26T11:00\n"
+            + "Date: 10/31/2023\n"
+            + "  -Subject :  NewName\n"
+            + "  -Description :  \n"
+            + "  -Start Time :  2023-10-31T10:00\n"
+            + "  -End Time :  2023-10-31T11:00\n";
     assertEquals(expectedOutput, outputStream.toString());
   }
 
@@ -555,32 +556,32 @@ class CommandParserTest {
   @Test
   void testCreateEventInvalidStartDateAfterEndDate() {
     String input = "create event Meeting from 2023-10-11T09:00 to 2023-10-10T10:00";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(input));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(input));
     assertEquals("Start date cannot be after end date", exception.getMessage());
   }
 
   @Test
   void testCreateEventInvalidDateFormat() {
     String input = "create event Meeting from 2023-10-1123 to 2023-10-10T10:00";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(input));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(input));
     assertEquals("Invalid date/time format: 2023-10-1123", exception.getMessage());
   }
 
   @Test
   void testCreateEventMissingToKeyword() {
     String input = "create event Meeting from 2023-10-10T09:00 2023-10-10T10:00";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(input));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(input));
     assertEquals("Expected 'to' after start date/time.", exception.getMessage());
   }
 
   @Test
   void testCreateEventMissingFromOrOnKeyword() {
     String input = "create event Meeting 2023-10-10T09:00 to 2023-10-10T10:00";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(input));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(input));
     assertEquals("Expected 'from' or 'on' after event name.", exception.getMessage());
   }
 
@@ -588,16 +589,16 @@ class CommandParserTest {
   void testCreateEventRecurringWithInvalidDays() {
     String input =
             "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats XYZ for 5";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(input));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(input));
     assertTrue(exception.getMessage().contains("Invalid day character"));
   }
 
   @Test
   void testCreateEventRecurringMissingForOrUntil() {
     String input = "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats MWF";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(input));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(input));
     assertEquals("Expected 'for' or 'until' after weekdays.", exception.getMessage());
   }
 
@@ -605,24 +606,24 @@ class CommandParserTest {
   void testEditEventMissingWithKeyword() {
     String input =
             "edit event name Meeting from 2023-10-10T09:00 to 2023-10-10T10:00 UpdatedMeeting";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(input));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(input));
     assertEquals("Expected 'with' after end date/time.", exception.getMessage());
   }
 
   @Test
   void testPrintEventsInvalidCommandFormat() {
     String input = "print events 2023-10-10";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(input));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(input));
     assertEquals("Expected 'on' or 'from' after 'print events'.", exception.getMessage());
   }
 
   @Test
   void testShowStatusInvalidDateTimeFormat() {
     String input = "show status on 2023-10-146";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(input));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(input));
     assertEquals("Invalid date/time format: 2023-10-146", exception.getMessage());
   }
 
@@ -641,31 +642,31 @@ class CommandParserTest {
   @Test
   void testInvalidCommandStructure() {
     String command = "create";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(command));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(command));
     assertEquals("Invalid command format.", exception.getMessage());
   }
 
   @Test
   void testUnknownCommand() {
     String input = "unknown command";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(input));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(input));
     assertEquals("Unknown command: unknown command", exception.getMessage());
   }
 
   @Test
   void testEmptyCommand() {
     String input = "";
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(input));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(input));
     assertEquals("Input command cannot be empty.", exception.getMessage());
   }
 
   @Test
   void testNullCommand() {
-    Exception exception = assertThrows(IllegalArgumentException.class,
-            () -> commandParser.parseCommand(null));
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(null));
     assertEquals("Input command cannot be empty.", exception.getMessage());
   }
 }

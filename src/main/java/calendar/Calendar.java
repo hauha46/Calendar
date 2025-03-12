@@ -282,8 +282,8 @@ public class Calendar {
         System.out.println("Date: " + dateFormatter.format(currentDate));
         for (EventInterface event : calendar.get(currentDate)) {
           if ((event.getStartTime().isEqual(startTime) || event.getStartTime().isAfter(startTime))
-                  && (event.getEndTime().isEqual(endTime) || event.getEndTime().isBefore(endTime)))
-          {
+                  && (event.getEndTime().isEqual(endTime) ||
+                  event.getEndTime().isBefore(endTime))) {
             System.out.println("  -Subject :  " + event.getSubject());
             System.out.println("  -Description :  " + event.getDescription());
             System.out.println("  -Start Time :  " + event.getStartTime());
@@ -362,8 +362,8 @@ public class Calendar {
    * @param endTime   the given end time.
    * @return the found event.
    */
-  private EventInterface searchEvent(String subject, LocalDateTime startTime, LocalDateTime endTime)
-  {
+  private EventInterface searchEvent(
+          String subject, LocalDateTime startTime, LocalDateTime endTime) {
     for (Map.Entry<LocalDate, Set<EventInterface>> entry : calendar.entrySet()) {
       Set<EventInterface> events = entry.getValue();
       for (EventInterface event : events) {
