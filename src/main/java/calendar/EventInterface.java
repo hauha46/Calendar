@@ -2,17 +2,43 @@ package calendar;
 
 import java.time.LocalDateTime;
 
+/**
+ * This interface represents an event.
+ */
 public interface EventInterface {
+  /**
+   * Retrieve the subject of the current event.
+   *
+   * @return the subject of the current event.
+   */
+  String getSubject();
 
+  /**
+   * Retrieve the start time of the current event.
+   *
+   * @return the start time of the current event.
+   */
+  LocalDateTime getStartTime();
 
-  public String getSubject();
+  /**
+   * Retrieve the end time of the current event.
+   *
+   * @return the end time of the current event.
+   */
+  LocalDateTime getEndTime();
 
-  
-  public LocalDateTime getStartTime();
+  /**
+   * Retrieve the description of the current event.
+   *
+   * @return the description of the current event.
+   */
+  String getDescription();
 
-  public LocalDateTime getEndTime();
-
-  public String getDescription();
-
-  public boolean isConflicted(EventInterface otherEvent);
+  /**
+   * Check if the current event has conflict with another event
+   *
+   * @param otherEvent the other event that need to be checked if there are any conflicts
+   * @return true if there is conflict, false if there isn't.
+   */
+  boolean isConflicted(EventInterface otherEvent);
 }

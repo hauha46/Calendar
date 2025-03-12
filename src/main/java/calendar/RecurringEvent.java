@@ -1,58 +1,48 @@
 package calendar;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
-public class RecurringEvent extends AbstractEvent {
-
-
-  private String subject;
-  private LocalDateTime startTime;
-  private LocalDateTime endTime;
-  private String description;
+/**
+ * The class for Recurring Event object. It has endRecurring, recurringDays and
+ * occurrences.
+ */
+public class RecurringEvent extends AbstractSingleEvent implements RecurringEventInterface {
   private LocalDateTime endRecurring;
   private String recurringDays;
   private int occurrences;
 
-  public RecurringEvent(String subject, String description, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime endRecurring, String recurringDays, int occurrences) {
-    super(subject,description,startTime,endTime);
+  /**
+   * Construct a recurring event based on given info.
+   *
+   * @param subject       the given subject.
+   * @param description   the given description.
+   * @param startTime     the given start time.
+   * @param endTime       the given end time.
+   * @param endRecurring  the given end recurring date time.
+   * @param recurringDays the given recurring days.
+   * @param occurrences   the given occurrences.
+   */
+  public RecurringEvent(String subject, String description, LocalDateTime startTime,
+                        LocalDateTime endTime, LocalDateTime endRecurring, String recurringDays,
+                        int occurrences) {
+    super(subject, description, startTime, endTime);
     this.endRecurring = endRecurring;
     this.recurringDays = recurringDays;
     this.occurrences = occurrences;
   }
 
-
-
-
+  @Override
   public LocalDateTime getEndRecurring() {
     return endRecurring;
   }
 
+  @Override
   public int getOccurrences() {
     return occurrences;
   }
 
+  @Override
   public String getRecurringDays() {
     return recurringDays;
   }
-
-
-
-  public boolean isConflicted(EventInterface otherEvent) {
-    //RecurringEvent otherEvent = (RecurringEvent) otherEvent1;
-    if (otherEvent == null) {
-      return false;
-    }
-    LocalDateTime otherStart = otherEvent.getStartTime();
-    LocalDateTime otherEnd = otherEvent.getEndTime();
-
-    // Check if the events overlap
-    return !(this.getStartTime() != null && this.getEndTime().isBefore(otherStart)) &&
-            !(otherEnd != null && otherEnd.isBefore(this.getStartTime()));
-  }
-
-//  @Override
-//  void addEvent() {
-//
-//  }
 }
