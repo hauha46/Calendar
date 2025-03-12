@@ -1,0 +1,10 @@
+create
+show status on 2023-10-146
+print events 2023-10-10
+edit event name Meeting from 2023-10-10T09:00 to 2023-10-10T10:00 UpdatedMeeting
+create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats MWF
+create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats XYZ for 5
+create event Meeting 2023-10-10T09:00 to 2023-10-10T10:00
+create event Meeting from 2023-10-10T09:00 2023-10-10T10:00
+create event Meeting from 2023-10-1123 to 2023-10-10T10:00
+create event Meeting from 2023-10-11T09:00 to 2023-10-10T10:00

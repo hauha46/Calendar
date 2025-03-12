@@ -1,0 +1,4 @@
+create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats MWF for 5
+edit events description Standup NewDescription
+print events from 2023-10-10T00:00 to 2023-10-20T23:59
+exit

@@ -1,0 +1,14 @@
+create event --autoDecline Meeting from 2023-10-10T09:00 to 2023-10-10T10:00
+create event Conference on 2023-10-12T00:00
+create event Conference from 2023-10-14T12:00 to 2023-10-15T17:00
+edit event name Meeting from 2023-10-10T09:00 to 2023-10-10T10:00 with Workshop
+create event Standup from 2023-10-16T09:00 to 2023-10-26T09:30 repeats TR for 5
+create event Review on 2023-11-10 repeats TR until 2023-11-31
+edit events description Standup NewDescription
+create event OldReview from 2023-12-10T10:00 to 2023-12-10T11:00 repeats TR until 2023-12-31
+edit events name OldReview from 2023-12-17T10:00 with CodeReview
+print events from 2023-10-10T08:00 to 2023-10-10T12:00
+print events on 2023-11-10
+show status on 2023-10-10T09:30
+export cal mycalendar.csv
+exit
