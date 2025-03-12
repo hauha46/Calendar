@@ -181,17 +181,9 @@ class CommandParserTest {
     String editCommand =
             "edit event locationABC Meeting from 2023-10-10T09:00 to 2023-10-10T10:00 "
                     + "with Conference";
-    assertDoesNotThrow(() -> commandParser.parseCommand(editCommand));
-
-    String printCommand = "print events on 2023-10-10";
-    assertDoesNotThrow(() -> commandParser.parseCommand(printCommand));
-
-    String expectedOutput = "Date: 10/10/2023\n"
-            + "  -Subject :  Meeting\n"
-            + "  -Description :  \n"
-            + "  -Start Time :  2023-10-10T09:00\n"
-            + "  -End Time :  2023-10-10T10:00\n";
-    assertEquals(expectedOutput, outputStream.toString());
+    Exception exception = assertThrows(
+            IllegalArgumentException.class, () -> commandParser.parseCommand(editCommand));
+    assertEquals("Unsupported property", exception.getMessage());
   }
 
 
