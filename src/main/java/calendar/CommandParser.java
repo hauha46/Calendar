@@ -1,5 +1,3 @@
-package calendar;
-
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,8 +14,8 @@ public class CommandParser {
   /**
    * Construct a Command Parser with a new instance of calendar.
    */
-  public CommandParser() {
-    calendar = new Calendar();
+  public CommandParser(Calendar calendar) {
+    this.calendar = calendar;
   }
 
   /**

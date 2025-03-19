@@ -1,11 +1,16 @@
-package calendar;
+//problem is that the calendar inoration of events is stored here
+//  would be needing a new calendar storage class to store the calendar objects.
 
+// the problem here is the heirarchy of commands that are being given, as create and use calendar are comming first.
+
+// create a class which creates the calendar object and give it back for usage.
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,12 +19,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
+// create the calendar constructor to include the name and timezone.
+//parsing the date to the currnt timezone.
 /**
  * The class for managing events in a calendar. The main attribute is calendar, which stores events
  * for each date.
  */
 public class Calendar {
+
+  private String name;
+  private ZoneId timeZone;
   private Map<LocalDate, Set<EventInterface>> calendar;
   private final DateTimeFormatter DATE_TIME_FORMATTER =
           DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -30,7 +39,12 @@ public class Calendar {
   /**
    * Construct a calendar with a new instance of TreeMap.
    */
-  public Calendar() {
+  public Calendar(String name,ZoneId timeZone) {
+
+    //name
+    //timezone
+    this.name=name;
+    this.timeZone=timeZone;
     calendar = new TreeMap<>(Comparator.naturalOrder());
   }
 
