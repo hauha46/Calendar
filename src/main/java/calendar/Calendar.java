@@ -1,9 +1,5 @@
-//problem is that the calendar inoration of events is stored here
-//  would be needing a new calendar storage class to store the calendar objects.
+package calendar;
 
-// the problem here is the heirarchy of commands that are being given, as create and use calendar are comming first.
-
-// create a class which creates the calendar object and give it back for usage.
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.DayOfWeek;
@@ -19,33 +15,43 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-// create the calendar constructor to include the name and timezone.
-//parsing the date to the currnt timezone.
+
 /**
  * The class for managing events in a calendar. The main attribute is calendar, which stores events
  * for each date.
  */
 public class Calendar {
-
-  private String name;
   private ZoneId timeZone;
   private Map<LocalDate, Set<EventInterface>> calendar;
   private final DateTimeFormatter DATE_TIME_FORMATTER =
           DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
   private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
   private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
-  private boolean autoDeclineConflicts = false;
+  private boolean autoDeclineConflicts;
 
   /**
    * Construct a calendar with a new instance of TreeMap.
    */
-  public Calendar(String name,ZoneId timeZone) {
-
-    //name
-    //timezone
-    this.name=name;
-    this.timeZone=timeZone;
+  public Calendar(ZoneId timeZone) {
+    this.timeZone = timeZone;
+    this.autoDeclineConflicts = true;
     calendar = new TreeMap<>(Comparator.naturalOrder());
+  }
+
+  /**
+   * Get the timeZone value.
+   */
+  public ZoneId getTimeZone() {
+    return this.timeZone;
+  }
+
+  /**
+   * Set the timeZone value.
+   *
+   * @param timeZone the given timezone value.
+   */
+  public void setTimeZone(ZoneId timeZone) {
+    this.timeZone = timeZone;
   }
 
   /**
@@ -54,7 +60,7 @@ public class Calendar {
    * @param autoDeclineConflicts the given boolean autoDecline value.
    */
   public void setAutoDeclineConflicts(boolean autoDeclineConflicts) {
-    this.autoDeclineConflicts = autoDeclineConflicts;
+    this.autoDeclineConflicts = true;
   }
 
   /**
@@ -222,7 +228,7 @@ public class Calendar {
    */
   public void editEventRecurring(String subject, LocalDateTime startTime, String property,
                                  String newValue) {
-    List<EventInterface> events = searchEvents(subject, startTime);
+    List<EventInterface> events = searchEvents(subject, startTime, null);
     if (!events.isEmpty()) {
       for (EventInterface event : events) {
         removeEvent(event);
@@ -397,12 +403,12 @@ public class Calendar {
    * @param startTime the given start time.
    * @return the list of found events.
    */
-  private List<EventInterface> searchEvents(String subject, LocalDateTime startTime) {
+  public List<EventInterface> searchEvents(String subject, LocalDateTime startTime, LocalDateTime endTime) {
     List<EventInterface> foundEvents = new ArrayList<>();
     for (Map.Entry<LocalDate, Set<EventInterface>> entry : calendar.entrySet()) {
       Set<EventInterface> events = entry.getValue();
       for (EventInterface event : events) {
-        if (event.getSubject().equals(subject)) {
+        if (event.getSubject().equals(subject) || subject == null) {
           if (startTime != null) {
             LocalDate currentDate = event.getStartTime().toLocalDate();
             LocalDate searchDate = startTime.toLocalDate();
@@ -410,7 +416,14 @@ public class Calendar {
             LocalTime searchTime = startTime.toLocalTime();
             if ((currentDate.equals(searchDate) || currentDate.isAfter(searchDate))
                     && currentTime.equals(searchTime)) {
-              foundEvents.add(event);
+              if (endTime != null) {
+                if (event.getEndTime().isBefore(endTime) || event.getEndTime().equals(endTime)) {
+                  foundEvents.add(event);
+                }
+              }
+              else {
+                foundEvents.add(event);
+              }
             }
           } else {
             foundEvents.add(event);
