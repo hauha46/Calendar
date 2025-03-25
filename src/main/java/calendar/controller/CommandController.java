@@ -120,11 +120,13 @@ public class CommandController {
     int index = 2;
     LocalDateTime startDateTime;
     LocalDateTime endDateTime;
-    if (tokens[index++].equals("on")) {
+    if (tokens[index].equals("on")) {
+      index++;
       startDateTime = dateTimeUtils.parseDateToDateTime(tokens[index++]);
       endDateTime = startDateTime.toLocalDate().atTime(LocalTime.of(23, 59));
     }
-    else if (tokens[index++].equals("between")) {
+    else if (tokens[index].equals("between")) {
+      index++;
       startDateTime = dateTimeUtils.parseDateToDateTime(tokens[index++]);
       index++;
       endDateTime = dateTimeUtils.parseDateToDateTime(tokens[index++]).toLocalDate().atTime(LocalTime.of(23, 59));

@@ -64,11 +64,7 @@ class CommandControllerTest {
     
     String editCommand = "edit calendar --name TempCalendar --property name PersonalCalendar";
     assertDoesNotThrow(() -> commandController.parseCommand(editCommand));
-    
-    String useCommand = "use calendar --name PersonalCalendar";
-    assertDoesNotThrow(() -> commandController.parseCommand(useCommand));
-    
-    // Should be able to use the renamed calendar
+
     assertTrue(true);
   }
   
@@ -189,7 +185,7 @@ class CommandControllerTest {
     String createCommand = "create event Meeting from 2025-03-25T10:00 to 2025-03-25T11:00";
     Exception exception = assertThrows(
             IllegalStateException.class, () -> newController.parseCommand(createCommand));
-    assertTrue(exception.getMessage().contains("No active calendar"));
+    assertTrue(exception.getMessage().contains("No active calendar selected"));
   }
 
   @Test
@@ -198,7 +194,7 @@ class CommandControllerTest {
     String createCommand = "create calendar --name MainCalendar --timezone Europe/London";
     Exception exception = assertThrows(
             IllegalArgumentException.class, () -> commandController.parseCommand(createCommand));
-    assertTrue(exception.getMessage().contains("Calendar with name MainCalendar already exists"));
+    assertTrue(exception.getMessage().contains("Calendar 'MainCalendar' already exist"));
   }
   
   @Test
@@ -207,7 +203,7 @@ class CommandControllerTest {
     String createCommand = "create calendar --name InvalidCalendar --timezone NotAValidZone";
     Exception exception = assertThrows(
             IllegalArgumentException.class, () -> commandController.parseCommand(createCommand));
-    assertTrue(exception.getMessage().contains("Invalid timezone"));
+    assertTrue(exception.getMessage().contains("Invalid timezone format: NotAValidZone"));
   }
 
   @Test

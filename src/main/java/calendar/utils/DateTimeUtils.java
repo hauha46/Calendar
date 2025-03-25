@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.zone.ZoneRulesException;
 
 /**
  * Utility class for date and time operations in the calendar application.
@@ -24,7 +25,7 @@ public class DateTimeUtils {
   public ZoneId parseZoneId(String timezoneStr) {
     try {
       return ZoneId.of(timezoneStr);
-    } catch (DateTimeParseException e) {
+    } catch (DateTimeParseException | ZoneRulesException e) {
       throw new IllegalArgumentException("Invalid timezone format: " + timezoneStr);
     }
   }

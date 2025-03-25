@@ -127,7 +127,8 @@ public class CalendarManager implements ICalendarManager {
   public void copyCalendarEvents(LocalDateTime startDateTime, LocalDateTime endDateTime, String targetCalendarName, LocalDateTime targetDateTime) throws IllegalArgumentException {
     this.hasCalendar(targetCalendarName);
     Calendar targetCalendarInstance = calendarMap.get(targetCalendarName);
-    List<IEvent> foundEvents = getActiveCalendar().searchEvents(null, startDateTime, endDateTime);
+    Calendar currentCalendarInstance = getActiveCalendar();
+    List<IEvent> foundEvents = currentCalendarInstance.searchEvents(null, startDateTime, endDateTime);
     LocalDateTime eventInitialDateTime = dateTimeUtils.convertToSODDateTime(startDateTime);
     LocalDateTime targetInitialDateTime = dateTimeUtils.convertTimeZone(targetDateTime, getActiveCalendar().getTimeZone(), targetCalendarInstance.getTimeZone());
     List<IEvent> addedEvents = new ArrayList<>();

@@ -43,6 +43,7 @@ public class EventManager implements IEventManager {
     this.eventUtils = new EventUtils();
     this.exportUtils = new ExportUtils();
   }
+
   /**
    * Add an event into calendar with its respective date. Handling both single event and multiple
    * spanning days event.
@@ -358,14 +359,13 @@ public class EventManager implements IEventManager {
             LocalDate searchDate = startTime.toLocalDate();
             LocalTime currentTime = event.getStartTime().toLocalTime();
             LocalTime searchTime = startTime.toLocalTime();
-            if ((currentDate.equals(searchDate) || currentDate.isAfter(searchDate))
-                    && currentTime.equals(searchTime)) {
+            if (((currentDate.equals(searchDate) && (currentTime.equals(searchTime) || currentTime.isAfter(searchTime))) || currentDate.isAfter(searchDate))
+            ) {
               if (endTime != null) {
                 if (event.getEndTime().isBefore(endTime) || event.getEndTime().equals(endTime)) {
                   foundEvents.add(event);
                 }
-              }
-              else {
+              } else {
                 foundEvents.add(event);
               }
             }
