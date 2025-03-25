@@ -1,11 +1,11 @@
-package calendar;
+package calendar.model;
 
 import java.time.LocalDateTime;
 
 /**
  * This interface represents a recurring event.
  */
-public interface RecurringEventInterface extends EventInterface {
+public interface IRecurringEvent extends IEvent {
   /**
    * Retrieve the date time recurring ends of the current recurring event.
    *

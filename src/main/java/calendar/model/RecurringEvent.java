@@ -1,4 +1,4 @@
-package calendar;
+package calendar.model;
 
 import java.time.LocalDateTime;
 
@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
  * The class for Recurring Event object. It has endRecurring, recurringDays and
  * occurrences.
  */
-public class RecurringEvent extends AbstractSingleEvent implements RecurringEventInterface {
+public class RecurringEvent extends AbstractSingleIEvent implements IRecurringEvent {
   private LocalDateTime endRecurring;
   private String recurringDays;
   private int occurrences;

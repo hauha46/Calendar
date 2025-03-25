@@ -1,11 +1,11 @@
-package calendar;
+package calendar.model;
 
 import java.time.LocalDateTime;
 
 /**
  * The abstract class for Single Event object. It has subjects, startTime, endTIme and description.
  */
-abstract public class AbstractSingleEvent implements EventInterface {
+abstract public class AbstractSingleIEvent implements IEvent {
   private String subject;
   private LocalDateTime startTime;
   private LocalDateTime endTime;
@@ -19,8 +19,8 @@ abstract public class AbstractSingleEvent implements EventInterface {
    * @param startTime   the given start time.
    * @param endTime     the given end time.
    */
-  public AbstractSingleEvent(String subject, String description, LocalDateTime startTime,
-                             LocalDateTime endTime) {
+  public AbstractSingleIEvent(String subject, String description, LocalDateTime startTime,
+                              LocalDateTime endTime) {
     if (startTime == null) {
       throw new IllegalArgumentException("Start time cannot be null.");
     }
@@ -54,7 +54,7 @@ abstract public class AbstractSingleEvent implements EventInterface {
   }
 
   @Override
-  public boolean isConflicted(EventInterface otherEvent) {
+  public boolean isConflicted(IEvent otherEvent) {
     if (otherEvent == null) {
       return false;
     }

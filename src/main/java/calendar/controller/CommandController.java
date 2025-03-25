@@ -1,29 +1,26 @@
-package calendar;
+package calendar.controller;
 
-import java.time.Duration;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import calendar.manager.CalendarManager;
+import calendar.model.Calendar;
+import calendar.utils.DateTimeUtils;
 
 /**
  * The class for managing inputs commands to actual calendar operations.
  */
-public class CommandParser {
-  private Calendar calendar;
-  private Map<String, Calendar> calendarMap;
-  private static final DateTimeFormatter dateTimeFormatter =
-          DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+public class CommandController {
+  private CalendarManager calendarManager;
+  private DateTimeUtils dateTimeUtils;
 
   /**
    * Construct a Command Parser with a new instance of calendar.
    */
-  public CommandParser() {
-    calendarMap = new HashMap<>();
+  public CommandController() {
+    calendarManager = new CalendarManager();
+    dateTimeUtils = new DateTimeUtils();
   }
 
   /**
@@ -84,28 +81,17 @@ public class CommandParser {
   }
 
   private void parseCreateCalendarCommand(String[] tokens) {
-    int index = 2;
+    int index = 3;
     String calendarName = tokens[index++];
     index++;
-    ZoneId calendarTimeZone = parseZoneId(tokens[index++]);
-
-    if (calendarMap.containsKey(calendarName)) {
-      throw new IllegalArgumentException("Duplicate calendar name: " + calendarName);
-    }
-
-    Calendar newCalendar = new Calendar(calendarTimeZone);
-    calendarMap.put(calendarName, newCalendar);
+    ZoneId calendarTimeZone = dateTimeUtils.parseZoneId(tokens[index]);
+    calendarManager.createCalendar(calendarName, calendarTimeZone);
   }
 
   private void parseUseCalendarCommand(String[] tokens) {
     int index = 3;
     String calendarName = tokens[index];
-
-    if (!calendarMap.containsKey(calendarName)) {
-      throw new IllegalArgumentException("Calendar name does not exist " + calendarName);
-    }
-
-    this.calendar = calendarMap.get(calendarName);
+    calendarManager.useCalendar(calendarName);
   }
 
   private void parseEditCalendarCommand(String[] tokens) {
@@ -113,47 +99,21 @@ public class CommandParser {
     String calendarName = tokens[index++];
     index++;
     String propertyName = tokens[index++];
-    String newValue = tokens[index++];
-
-    switch (propertyName) {
-      case "name": {
-        Calendar calendarInstance = calendarMap.get(calendarName);
-        calendarMap.put(propertyName, calendarInstance);
-        break;
-      }
-      case "timezone":{
-        this.calendar.setTimeZone(parseZoneId(newValue));
-        break;
-      }
-      default: {
-        throw new IllegalArgumentException("Unknown property: " + propertyName);
-      }
-    }
+    String newValue = tokens[index];
+    calendarManager.editCalendarProperty(calendarName, propertyName, newValue);
   }
 
   private void parseCopyEventCommand(String[] tokens) {
     int index = 2;
     String eventName = tokens[index++];
     index++;
-    LocalDateTime startDateTime = parseDateTime(tokens[index++]);
+    LocalDateTime startDateTime = dateTimeUtils.parseDateTime(tokens[index++]);
     index++;
     String targetCalendarName = tokens[index++];
     index++;
-    LocalDateTime targetStartDateTime = parseDateTime(tokens[index++]);
-    if (!calendarMap.containsKey(targetCalendarName)) {
-      throw new IllegalArgumentException("Calendar name does not exist: " + targetCalendarName);
-    }
-    LocalDateTime endDateTime = startDateTime.toLocalDate().atTime(LocalTime.of(23, 59));;
-    List<EventInterface> foundEvents = calendar.searchEvents(eventName, startDateTime, endDateTime);
+    LocalDateTime targetStartDateTime = dateTimeUtils.parseDateTime(tokens[index]);
+    calendarManager.copyCalendarEvent(eventName, startDateTime, targetCalendarName, targetStartDateTime);
 
-    if (foundEvents.isEmpty()) {
-      throw new IllegalArgumentException("No events found for " + eventName);
-    }
-
-    EventInterface targetEvent = foundEvents.get(0);
-    Duration duration = Duration.between(targetEvent.getStartTime(), targetEvent.getEndTime());
-    Calendar targetCalendarInstance = calendarMap.get(targetCalendarName);
-    targetCalendarInstance.addEvent(targetEvent.getSubject(), targetEvent.getDescription(), targetStartDateTime, targetStartDateTime.plus(duration));
   }
 
   private void parseCopyEventsCommand(String[] tokens) {
@@ -161,35 +121,22 @@ public class CommandParser {
     LocalDateTime startDateTime;
     LocalDateTime endDateTime;
     if (tokens[index++].equals("on")) {
-      startDateTime = parseDateToDateTime(tokens[index++]);
+      startDateTime = dateTimeUtils.parseDateToDateTime(tokens[index++]);
       endDateTime = startDateTime.toLocalDate().atTime(LocalTime.of(23, 59));
     }
     else if (tokens[index++].equals("between")) {
-      startDateTime = parseDateToDateTime(tokens[index++]);
+      startDateTime = dateTimeUtils.parseDateToDateTime(tokens[index++]);
       index++;
-      endDateTime = parseDateToDateTime(tokens[index++]).toLocalDate().atTime(LocalTime.of(23, 59));
+      endDateTime = dateTimeUtils.parseDateToDateTime(tokens[index++]).toLocalDate().atTime(LocalTime.of(23, 59));
     }
     else {
       throw new IllegalArgumentException("Unknown command: " + tokens[index]);
     }
-
     index++;
     String targetCalendarName = tokens[index++];
-    if (!calendarMap.containsKey(targetCalendarName)) {
-      throw new IllegalArgumentException("Calendar name does not exist: " + targetCalendarName);
-    }
     index++;
-    LocalDateTime targetStartDateTime = parseDateToDateTime(tokens[index]);
-    List<EventInterface> foundEvents = calendar.searchEvents(null, startDateTime, endDateTime);
-    Calendar targetCalendarInstance = calendarMap.get(targetCalendarName);
-    LocalDateTime eventInitialDateTime = startDateTime.toLocalDate().atStartOfDay();
-    for (EventInterface event : foundEvents) {
-      Duration duratiomFromStartTime = Duration.between(eventInitialDateTime, event.getStartTime());
-      Duration duratiomFromEndTime = Duration.between(eventInitialDateTime, event.getEndTime());
-
-      // Determine logic for selecting start time
-      targetCalendarInstance.addEvent(event.getSubject(), event.getDescription(), targetStartDateTime.plus(duratiomFromStartTime), targetStartDateTime.plus(duratiomFromEndTime));
-    }
+    LocalDateTime targetStartDateTime = dateTimeUtils.parseDateToDateTime((tokens[index]));
+    calendarManager.copyCalendarEvents(startDateTime, endDateTime, targetCalendarName, targetStartDateTime);
 
   }
 
@@ -199,9 +146,7 @@ public class CommandParser {
    * @param tokens the given input parameters.
    */
   private void parseCreateEventCommand(String[] tokens) {
-    if (calendar == null) {
-      throw new IllegalArgumentException("Please specify a calendar first.");
-    }
+    Calendar calendar = calendarManager.getActiveCalendar();
     int index = 2;
     boolean autoDecline = false;
     String eventName;
@@ -221,20 +166,20 @@ public class CommandParser {
     if (tokens[index].equals("from")) {
       // Handle "create event from ... to ..."
       index++;
-      startDateTime = parseDateTime(tokens[index++]);
+      startDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
       if (!tokens[index].equals("to")) {
         throw new IllegalArgumentException("Expected 'to' after start date/time.");
       }
       index++;
-      endDateTime = parseDateTime(tokens[index++]);
+      endDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
     } else if (tokens[index].equals("on")) {
       // Handle "create event on ..."
       index++;
       String startDateTimeString = tokens[index++];
       try {
-        startDateTime = parseDateTime(startDateTimeString);
+        startDateTime =dateTimeUtils.parseDateTime(startDateTimeString);
       } catch (IllegalArgumentException e) {
-        startDateTime = parseDateToDateTime(startDateTimeString);
+        startDateTime =dateTimeUtils.parseDateToDateTime(startDateTimeString);
       }
       endDateTime = startDateTime.toLocalDate().atTime(LocalTime.of(23, 59));
     } else {
@@ -256,9 +201,9 @@ public class CommandParser {
         index++;
         String endDateTimeString = tokens[index++];
         try {
-          endRecurringDateTime = parseDateTime(endDateTimeString);
+          endRecurringDateTime =dateTimeUtils.parseDateTime(endDateTimeString);
         } catch (IllegalArgumentException e) {
-          endRecurringDateTime = parseDateToDateTime(endDateTimeString);
+          endRecurringDateTime =dateTimeUtils.parseDateToDateTime(endDateTimeString);
           endRecurringDateTime = endRecurringDateTime.toLocalDate().atTime(LocalTime.of(23, 59));
         }
       }
@@ -278,9 +223,7 @@ public class CommandParser {
    * @param tokens the given input parameters.
    */
   private void parseEditEventCommand(String[] tokens) {
-    if (calendar == null) {
-      throw new IllegalArgumentException("Please specify a calendar first.");
-    }
+    Calendar calendar = calendarManager.getActiveCalendar();
     int index = 2;
     String propertyName = tokens[index++];
     String eventName = tokens[index++];
@@ -289,12 +232,12 @@ public class CommandParser {
 
     if (tokens[index].equals("from")) {
       index++;
-      startDateTime = parseDateTime(tokens[index++]);
+      startDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
       if (!tokens[index].equals("to")) {
         throw new IllegalArgumentException("Expected 'to' after start date/time.");
       }
       index++;
-      endDateTime = parseDateTime(tokens[index++]);
+      endDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
     } else {
       throw new IllegalArgumentException("Expected 'from' after event name.");
     }
@@ -313,9 +256,7 @@ public class CommandParser {
    * @param tokens the given input parameters.
    */
   private void parseEditEventsCommand(String[] tokens) {
-    if (calendar == null) {
-      throw new IllegalArgumentException("Please specify a calendar first.");
-    }
+    Calendar calendar = calendarManager.getActiveCalendar();
     int index = 2;
     String propertyName = tokens[index++];
     String eventName = tokens[index++];
@@ -324,7 +265,7 @@ public class CommandParser {
 
     if (tokens[index].equals("from")) {
       index++;
-      startDateTime = parseDateTime(tokens[index++]);
+      startDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
       if (!tokens[index].equals("with")) {
         throw new IllegalArgumentException("Expected 'with' after start date/time.");
       }
@@ -341,24 +282,22 @@ public class CommandParser {
    * @param tokens the given input parameters.
    */
   private void parsePrintEventsCommand(String[] tokens) {
-    if (calendar == null) {
-      throw new IllegalArgumentException("Please specify a calendar first.");
-    }
+    Calendar calendar = calendarManager.getActiveCalendar();
     int index = 2;
     LocalDateTime startDateTime;
     LocalDateTime endDateTime = null;
 
     if (tokens[index].equals("on")) {
       index++;
-      startDateTime = parseDateToDateTime(tokens[index++]);
+      startDateTime =dateTimeUtils.parseDateToDateTime(tokens[index++]);
     } else if (tokens[index].equals("from")) {
       index++;
-      startDateTime = parseDateTime(tokens[index++]);
+      startDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
       if (!tokens[index].equals("to")) {
         throw new IllegalArgumentException("Expected 'to' after start date/time.");
       }
       index++;
-      endDateTime = parseDateTime(tokens[index++]);
+      endDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
     } else {
       throw new IllegalArgumentException("Expected 'on' or 'from' after 'print events'.");
     }
@@ -372,9 +311,7 @@ public class CommandParser {
    * @param tokens the given input parameters.
    */
   private void parseExportCalCommand(String[] tokens) {
-    if (calendar == null) {
-      throw new IllegalArgumentException("Please specify a calendar first.");
-    }
+    Calendar calendar = calendarManager.getActiveCalendar();
     String fileName = tokens[2];
     calendar.exportCSV(fileName);
   }
@@ -385,56 +322,8 @@ public class CommandParser {
    * @param tokens the given input parameters.
    */
   private void parseShowStatusCommand(String[] tokens) {
-    if (calendar == null) {
-      throw new IllegalArgumentException("Please specify a calendar first.");
-    }
-    LocalDateTime date = parseDateTime((tokens[3]));
+    Calendar calendar = calendarManager.getActiveCalendar();
+    LocalDateTime date =dateTimeUtils.parseDateTime((tokens[3]));
     calendar.isBusy(date);
-  }
-
-  // Helper functions
-  /**
-   * Parse ZoneId object from timezone string input.
-   *
-   * @param timezoneStr the given timezone string.
-   * @return parsed ZoneId object.
-   * @throws IllegalArgumentException throws error if the string does not have appropriate format.
-   */
-  private ZoneId parseZoneId(String timezoneStr) {
-    try {
-      return ZoneId.of(timezoneStr);
-    } catch (DateTimeParseException e) {
-      throw new IllegalArgumentException("Invalid timezone format: " + timezoneStr);
-    }
-  }
-
-  /**
-   * Parse LocalDateTime object from date time string input.
-   *
-   * @param dateTimeStr the given date time string.
-   * @return parsed LocalDateTime object.
-   * @throws IllegalArgumentException throws error if the string does not have appropriate format.
-   */
-  private LocalDateTime parseDateTime(String dateTimeStr) {
-    try {
-      return LocalDateTime.parse(dateTimeStr);
-    } catch (DateTimeParseException e) {
-      throw new IllegalArgumentException("Invalid date/time format: " + dateTimeStr);
-    }
-  }
-
-  /**
-   * Parse LocalDateTime object from date string input.
-   *
-   * @param dateStr the given date string.
-   * @return parsed LocalDateTime object.
-   * @throws IllegalArgumentException throws error if the string does not have appropriate format.
-   */
-  private LocalDateTime parseDateToDateTime(String dateStr) {
-    try {
-      return LocalDateTime.parse(dateStr + "T00:00", dateTimeFormatter);
-    } catch (DateTimeParseException e) {
-      throw new IllegalArgumentException("Invalid date format: " + dateStr);
-    }
   }
 }

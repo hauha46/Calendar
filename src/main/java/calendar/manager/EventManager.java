@@ -1,4 +1,10 @@
-package calendar;
+package calendar.manager;
+
+import calendar.model.IEvent;
+import calendar.model.RecurringEvent;
+import calendar.model.OneTimeEvent;
+import calendar.utils.EventUtils;
+import calendar.utils.ExportUtils;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -6,7 +12,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,52 +22,27 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * The class for managing events in a calendar. The main attribute is calendar, which stores events
- * for each date.
+ * Manager class for handling events operations.
  */
-public class Calendar {
-  private ZoneId timeZone;
-  private Map<LocalDate, Set<EventInterface>> calendar;
+public class EventManager implements IEventManager {
+  private Map<LocalDate, Set<IEvent>> calendar;
   private final DateTimeFormatter DATE_TIME_FORMATTER =
           DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
   private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
   private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
-  private boolean autoDeclineConflicts;
+  private EventUtils eventUtils;
+  private ExportUtils exportUtils;
 
   /**
-   * Construct a calendar with a new instance of TreeMap.
+   * Constructs a new EventManager with default settings.
+   * Initializes the calendar storage structure and utility classes.
+   * Auto-decline conflicts is enabled by default.
    */
-  public Calendar(ZoneId timeZone) {
-    this.timeZone = timeZone;
-    this.autoDeclineConflicts = true;
-    calendar = new TreeMap<>(Comparator.naturalOrder());
+  public EventManager() {
+    this.calendar = new TreeMap<>(Comparator.naturalOrder());
+    this.eventUtils = new EventUtils();
+    this.exportUtils = new ExportUtils();
   }
-
-  /**
-   * Get the timeZone value.
-   */
-  public ZoneId getTimeZone() {
-    return this.timeZone;
-  }
-
-  /**
-   * Set the timeZone value.
-   *
-   * @param timeZone the given timezone value.
-   */
-  public void setTimeZone(ZoneId timeZone) {
-    this.timeZone = timeZone;
-  }
-
-  /**
-   * Set the autoDecline flag with a boolean value.
-   *
-   * @param autoDeclineConflicts the given boolean autoDecline value.
-   */
-  public void setAutoDeclineConflicts(boolean autoDeclineConflicts) {
-    this.autoDeclineConflicts = true;
-  }
-
   /**
    * Add an event into calendar with its respective date. Handling both single event and multiple
    * spanning days event.
@@ -73,8 +53,8 @@ public class Calendar {
    * @throws IllegalArgumentException throws error if the input is invalid.
    */
   public void addEvent(String subject, String description, LocalDateTime startTime,
-                       LocalDateTime endTime) throws IllegalArgumentException {
-    List<EventInterface> events = new ArrayList<>();
+                       LocalDateTime endTime, boolean autoDeclineConflicts) throws IllegalArgumentException {
+    List<IEvent> events = new ArrayList<>();
     LocalDate startDate = startTime.toLocalDate();
     LocalDate endDate = endTime.toLocalDate();
 
@@ -95,13 +75,13 @@ public class Calendar {
       }
     }
 
-    for (EventInterface event : events) {
-      if (hasConflict(event) && autoDeclineConflicts) {
+    for (IEvent event : events) {
+      if (eventUtils.hasConflict(calendar, event) && autoDeclineConflicts) {
         throw new IllegalArgumentException("Conflicted event and auto-decline is enabled.");
       }
     }
 
-    for (EventInterface event : events) {
+    for (IEvent event : events) {
       calendar.computeIfAbsent(
               event.getStartTime().toLocalDate(), k -> new HashSet<>()).add(event);
     }
@@ -124,13 +104,13 @@ public class Calendar {
           String subject, String description, LocalDateTime startTime, LocalDateTime endTime,
           LocalDateTime endRecurring, String recurringDays, int occurrences)
           throws IllegalArgumentException {
-    List<EventInterface> events = generateRecurringEvents(subject, description, startTime, endTime,
+    List<IEvent> events = generateRecurringEvents(subject, description, startTime, endTime,
             endRecurring, recurringDays, occurrences);
-    if (hasAnyConflict(events)) {
+    if (eventUtils.hasAnyConflict(calendar, events)) {
       throw new IllegalArgumentException("Recurring event series conflicts with existing events.");
     }
 
-    for (EventInterface event : events) {
+    for (IEvent event : events) {
       calendar.computeIfAbsent(
               event.getStartTime().toLocalDate(), k -> new HashSet<>()).add(event);
     }
@@ -148,15 +128,15 @@ public class Calendar {
    * @throws IllegalArgumentException throws error if the input is invalid
    */
   public void editEventSingle(String subject, LocalDateTime startTime, LocalDateTime endTime,
-                              String property, String newValue) throws IllegalArgumentException {
-    List<EventInterface> events = new ArrayList<>();
+                              String property, String newValue, boolean autoDeclineConflicts) throws IllegalArgumentException {
+    List<IEvent> events = new ArrayList<>();
     LocalDate startDate = startTime.toLocalDate();
     LocalDate endDate = endTime.toLocalDate();
 
     if (startDate.isAfter(endDate)) {
       throw new IllegalArgumentException("Start date cannot be after end date");
     } else if (startDate.isEqual(endDate)) {
-      EventInterface foundEvent = searchEvent(subject, startTime, endTime);
+      IEvent foundEvent = searchEvent(subject, startTime, endTime);
       if (foundEvent != null) {
         events.add(foundEvent);
       }
@@ -167,7 +147,7 @@ public class Calendar {
         currentStartTime = currentStartTime.toLocalDate().equals(startDate) ? startTime :
                 currentStartTime;
         currentEndTime = currentEndTime.toLocalDate().equals(endDate) ? endTime : currentEndTime;
-        EventInterface foundEvent = searchEvent(subject, currentStartTime, currentEndTime);
+        IEvent foundEvent = searchEvent(subject, currentStartTime, currentEndTime);
         if (foundEvent != null) {
           events.add(foundEvent);
         }
@@ -177,7 +157,7 @@ public class Calendar {
     }
 
     if (events.size() > 0) {
-      for (EventInterface event : events) {
+      for (IEvent event : events) {
         removeEvent(event);
       }
 
@@ -209,9 +189,9 @@ public class Calendar {
       }
 
       try {
-        addEvent(newSubject, newDescription, newStartTime, newEndTime);
+        addEvent(newSubject, newDescription, newStartTime, newEndTime, autoDeclineConflicts);
       } catch (IllegalArgumentException e) {
-        addEvent(subject, events.get(0).getDescription(), startTime, endTime);
+        addEvent(subject, events.get(0).getDescription(), startTime, endTime, autoDeclineConflicts);
       }
     }
   }
@@ -228,9 +208,9 @@ public class Calendar {
    */
   public void editEventRecurring(String subject, LocalDateTime startTime, String property,
                                  String newValue) {
-    List<EventInterface> events = searchEvents(subject, startTime, null);
+    List<IEvent> events = searchEvents(subject, startTime, null);
     if (!events.isEmpty()) {
-      for (EventInterface event : events) {
+      for (IEvent event : events) {
         removeEvent(event);
       }
       RecurringEvent foundEvent = (RecurringEvent) events.get(0);
@@ -300,7 +280,7 @@ public class Calendar {
     while (currentDate.isEqual(endDate) || currentDate.isBefore(endDate)) {
       if (calendar.containsKey(currentDate) && !calendar.get(currentDate).isEmpty()) {
         System.out.println("Date: " + dateFormatter.format(currentDate));
-        for (EventInterface event : calendar.get(currentDate)) {
+        for (IEvent event : calendar.get(currentDate)) {
           if ((event.getStartTime().isEqual(startTime) || event.getStartTime().isAfter(startTime))
                   && (event.getEndTime().isEqual(endTime) ||
                   event.getEndTime().isBefore(endTime))) {
@@ -324,10 +304,10 @@ public class Calendar {
     try (FileWriter writer = new FileWriter(fileName)) {
       writer.write("Subject,Start Date,Start Time,End Date,End Time,Description\n");
 
-      for (Map.Entry<LocalDate, Set<EventInterface>> entry : calendar.entrySet()) {
-        for (EventInterface event : entry.getValue()) {
-          String subject = escapeCSV(event.getSubject());
-          String description = escapeCSV(event.getDescription());
+      for (Map.Entry<LocalDate, Set<IEvent>> entry : calendar.entrySet()) {
+        for (IEvent event : entry.getValue()) {
+          String subject = exportUtils.escapeCSV(event.getSubject());
+          String description = exportUtils.escapeCSV(event.getDescription());
           String startDate = event.getStartTime().format(dateFormatter);
           String startTime = event.getStartTime().format(timeFormatter);
           String endDate = event.getEndTime().format(dateFormatter);
@@ -351,49 +331,13 @@ public class Calendar {
   public void isBusy(LocalDateTime dateTime) {
     String result = "available";
     LocalDate currentDate = dateTime.toLocalDate();
-    for (EventInterface event : calendar.get(currentDate)) {
+    for (IEvent event : calendar.get(currentDate)) {
       if (event.getStartTime().isEqual(dateTime) || event.getStartTime().isBefore(dateTime)
               && event.getEndTime().isAfter(dateTime)) {
         result = "busy";
       }
     }
     System.out.println(result);
-  }
-
-  // Helper functions
-
-  /**
-   * Remove an event from the current calendar.
-   *
-   * @param event the given event.
-   */
-  private void removeEvent(EventInterface event) {
-    if (event != null) {
-      Set<EventInterface> events = calendar.get(event.getStartTime().toLocalDate());
-      events.remove(event);
-    }
-  }
-
-  /**
-   * Search an event from the current calendar based on the given info.
-   *
-   * @param subject   the given subject.
-   * @param startTime the given start time.
-   * @param endTime   the given end time.
-   * @return the found event.
-   */
-  private EventInterface searchEvent(
-          String subject, LocalDateTime startTime, LocalDateTime endTime) {
-    for (Map.Entry<LocalDate, Set<EventInterface>> entry : calendar.entrySet()) {
-      Set<EventInterface> events = entry.getValue();
-      for (EventInterface event : events) {
-        if (event.getSubject().equals(subject) && event.getStartTime().equals(startTime)
-                && event.getEndTime().equals(endTime)) {
-          return event;
-        }
-      }
-    }
-    return null;
   }
 
   /**
@@ -403,11 +347,11 @@ public class Calendar {
    * @param startTime the given start time.
    * @return the list of found events.
    */
-  public List<EventInterface> searchEvents(String subject, LocalDateTime startTime, LocalDateTime endTime) {
-    List<EventInterface> foundEvents = new ArrayList<>();
-    for (Map.Entry<LocalDate, Set<EventInterface>> entry : calendar.entrySet()) {
-      Set<EventInterface> events = entry.getValue();
-      for (EventInterface event : events) {
+  public List<IEvent> searchEvents(String subject, LocalDateTime startTime, LocalDateTime endTime) {
+    List<IEvent> foundEvents = new ArrayList<>();
+    for (Map.Entry<LocalDate, Set<IEvent>> entry : calendar.entrySet()) {
+      Set<IEvent> events = entry.getValue();
+      for (IEvent event : events) {
         if (event.getSubject().equals(subject) || subject == null) {
           if (startTime != null) {
             LocalDate currentDate = event.getStartTime().toLocalDate();
@@ -435,36 +379,55 @@ public class Calendar {
   }
 
   /**
-   * Check if an event has any conflict with the current calendar.
+   * Get all active events in the current calendar.
    *
-   * @param event the given event.
-   * @return boolean value whether the event has any conflicts or not.
+   * @return the list of found events.
    */
-  private boolean hasConflict(EventInterface event) {
-    LocalDate date = event.getStartTime().toLocalDate();
-    if (calendar.containsKey(date)) {
-      for (EventInterface existingEvent : calendar.get(date)) {
-        if (event.isConflicted(existingEvent)) {
-          return true;
-        }
+  public List<IEvent> getAllEvents() {
+    List<IEvent> foundEvents = new ArrayList<>();
+    for (Map.Entry<LocalDate, Set<IEvent>> entry : calendar.entrySet()) {
+      Set<IEvent> events = entry.getValue();
+      for (IEvent event : events) {
+        foundEvents.add(event);
       }
     }
-    return false;
+    return foundEvents;
   }
 
   /**
-   * Check if a list of event has any conflict with the current calendar.
+   * Remove an event from the current calendar.
    *
-   * @param events the given list of event.
-   * @return boolean value whether the list has any conflicts or not.
+   * @param event the given event.
    */
-  private boolean hasAnyConflict(List<EventInterface> events) {
-    for (EventInterface event : events) {
-      if (hasConflict(event)) {
-        return true;
+  public void removeEvent(IEvent event) {
+    if (event != null) {
+      Set<IEvent> events = calendar.get(event.getStartTime().toLocalDate());
+      events.remove(event);
+    }
+  }
+
+  // Helper functions
+
+  /**
+   * Search an event from the current calendar based on the given info.
+   *
+   * @param subject   the given subject.
+   * @param startTime the given start time.
+   * @param endTime   the given end time.
+   * @return the found event.
+   */
+  private IEvent searchEvent(
+          String subject, LocalDateTime startTime, LocalDateTime endTime) {
+    for (Map.Entry<LocalDate, Set<IEvent>> entry : calendar.entrySet()) {
+      Set<IEvent> events = entry.getValue();
+      for (IEvent event : events) {
+        if (event.getSubject().equals(subject) && event.getStartTime().equals(startTime)
+                && event.getEndTime().equals(endTime)) {
+          return event;
+        }
       }
     }
-    return false;
+    return null;
   }
 
   /**
@@ -480,11 +443,11 @@ public class Calendar {
    * @return List of generated events.
    * @throws IllegalArgumentException throws error if the input is invalid.
    */
-  private List<EventInterface> generateRecurringEvents(
+  private List<IEvent> generateRecurringEvents(
           String subject, String description, LocalDateTime startTime, LocalDateTime endTime,
           LocalDateTime endRecurring, String recurringDays, int occurrences)
           throws IllegalArgumentException {
-    List<EventInterface> result = new ArrayList<>();
+    List<IEvent> result = new ArrayList<>();
     LocalDateTime currentStartTime = startTime;
     LocalDateTime currentEndTime = endTime;
     int count = 0;
@@ -534,23 +497,4 @@ public class Calendar {
 
     return result;
   }
-
-  /**
-   * Safeguard function for subject and description in case the format is incorrect for csv export.
-   *
-   * @param field the given field value.
-   * @return safe string for subject or description.
-   */
-  private String escapeCSV(String field) {
-    if (field == null) {
-      return "";
-    }
-
-    if (field.contains(",") || field.contains("\"") || field.contains("\n")) {
-      field = field.replace("\"", "\"\"");
-      return "\"" + field + "\"";
-    }
-    return field;
-  }
-
 }

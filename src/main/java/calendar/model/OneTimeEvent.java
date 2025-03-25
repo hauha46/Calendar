@@ -1,11 +1,11 @@
-package calendar;
+package calendar.model;
 
 import java.time.LocalDateTime;
 
 /**
  * The class for Single Event object.
  */
-public class OneTimeEvent extends AbstractSingleEvent {
+public class OneTimeEvent extends AbstractSingleIEvent {
 
   /**
    * Construct an event based on given info.

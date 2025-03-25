@@ -1,13 +1,16 @@
-package calendar;
+package calendar.view;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import calendar.controller.CommandController;
+
 /**
  * The class for handling I/O input from keyboard.
  */
 public class Interpreter {
-  private static final CommandParser commandParser = new CommandParser();
+  private static final CommandController COMMAND_CONTROLLER = new CommandController();
 
   /**
    * Main class for I/O operations handling.
@@ -55,7 +58,7 @@ public class Interpreter {
       }
 
       try {
-        commandParser.parseCommand(input);
+        COMMAND_CONTROLLER.parseCommand(input);
       } catch (IllegalArgumentException e) {
         System.out.println("Error: " + e.getMessage());
       }
@@ -87,7 +90,7 @@ public class Interpreter {
         }
 
         try {
-          commandParser.parseCommand(command);
+          COMMAND_CONTROLLER.parseCommand(command);
         } catch (Exception e) {
           System.out.println("Error at line " + lineNumber + ": " + command);
           System.out.println("Reason: " + e.getMessage());
