@@ -8,12 +8,9 @@ import calendar.view.Interpreter;
  */
 public class MockInterpreter extends Interpreter {
   public String lastModeSelected = "";
-  public String lastInputProcessed = "";
-  public boolean exitCalled = false;
 
   @Override
   public void run(CommandController commandController) {
     // Empty implementation for testing
   }
-
 }

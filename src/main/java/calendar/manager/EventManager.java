@@ -54,7 +54,8 @@ public class EventManager implements IEventManager {
    * @throws IllegalArgumentException throws error if the input is invalid.
    */
   public void addEvent(String subject, String description, LocalDateTime startTime,
-                       LocalDateTime endTime, boolean autoDeclineConflicts) throws IllegalArgumentException {
+                       LocalDateTime endTime, boolean autoDeclineConflicts)
+          throws IllegalArgumentException {
     List<IEvent> events = new ArrayList<>();
     LocalDate startDate = startTime.toLocalDate();
     LocalDate endDate = endTime.toLocalDate();
@@ -129,7 +130,8 @@ public class EventManager implements IEventManager {
    * @throws IllegalArgumentException throws error if the input is invalid
    */
   public void editEventSingle(String subject, LocalDateTime startTime, LocalDateTime endTime,
-                              String property, String newValue, boolean autoDeclineConflicts) throws IllegalArgumentException {
+                              String property, String newValue, boolean autoDeclineConflicts)
+          throws IllegalArgumentException {
     List<IEvent> events = new ArrayList<>();
     LocalDate startDate = startTime.toLocalDate();
     LocalDate endDate = endTime.toLocalDate();
@@ -359,7 +361,9 @@ public class EventManager implements IEventManager {
             LocalDate searchDate = startTime.toLocalDate();
             LocalTime currentTime = event.getStartTime().toLocalTime();
             LocalTime searchTime = startTime.toLocalTime();
-            if (((currentDate.equals(searchDate) && (currentTime.equals(searchTime) || currentTime.isAfter(searchTime))) || currentDate.isAfter(searchDate))
+            if (((currentDate.equals(searchDate) && (currentTime.equals(searchTime) ||
+                    currentTime.isAfter(searchTime))) ||
+                    currentDate.isAfter(searchDate))
             ) {
               if (endTime != null) {
                 if (event.getEndTime().isBefore(endTime) || event.getEndTime().equals(endTime)) {

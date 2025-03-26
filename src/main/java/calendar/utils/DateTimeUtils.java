@@ -15,6 +15,7 @@ import java.time.zone.ZoneRulesException;
 public class DateTimeUtils {
   private static final DateTimeFormatter dateTimeFormatter =
           DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
   /**
    * Parse ZoneId object from timezone string input.
    *
@@ -83,7 +84,7 @@ public class DateTimeUtils {
   /**
    * Converts a LocalDateTime from one timezone to another.
    *
-   * @param dateTime the LocalDateTime to convert
+   * @param dateTime   the LocalDateTime to convert
    * @param sourceZone the source timezone of the dateTime
    * @param targetZone the target timezone to convert to
    * @return the converted LocalDateTime in the target timezone

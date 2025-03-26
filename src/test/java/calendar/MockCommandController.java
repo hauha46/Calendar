@@ -1,7 +1,7 @@
 package calendar;
 
-//contaiing only commands present inside the calanderManager as OckClass is preset.
 import calendar.controller.CommandController;
+
 /**
  * This class mock for the CommandController , used for isolating classes.
  */

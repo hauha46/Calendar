@@ -102,7 +102,8 @@ public class Calendar implements ICalendar {
    */
   public void editEventSingle(String subject, LocalDateTime startTime, LocalDateTime endTime,
                               String property, String newValue) throws IllegalArgumentException {
-    eventManager.editEventSingle(subject, startTime, endTime, property, newValue, this.autoDeclineConflicts);
+    eventManager.editEventSingle(
+            subject, startTime, endTime, property, newValue, this.autoDeclineConflicts);
   }
 
   /**

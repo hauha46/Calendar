@@ -5,8 +5,6 @@ import static org.junit.Assert.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import calendar.MockCalendarManager;
-import calendar.MockInterpreter;
 import calendar.controller.CommandController;
 
 import org.junit.Before;
@@ -94,7 +92,7 @@ public class CommandControllerTest {
   }
 
   /**
-   * Test to check the startmethod, which initiates the Interpreter..
+   * Test to check the start method, which initiates the Interpreter.
    */
   @Test
   public void testStartMethod() {

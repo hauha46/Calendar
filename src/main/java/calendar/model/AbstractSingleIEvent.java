@@ -62,7 +62,8 @@ abstract public class AbstractSingleIEvent implements IEvent {
     LocalDateTime otherStart = otherEvent.getStartTime();
     LocalDateTime otherEnd = otherEvent.getEndTime();
 
-    return !(this.getEndTime() != null && this.getEndTime().isBefore(otherStart)) &&
-            !(otherEnd != null && otherEnd.isBefore(this.getStartTime()));
+    return !(this.getEndTime() != null && (this.getEndTime().isBefore(otherStart) ||
+            this.getEndTime().isEqual(otherStart))) && !(otherEnd != null &&
+            (otherEnd.isBefore(this.getStartTime()) || otherEnd.isEqual(this.getStartTime())));
   }
 }

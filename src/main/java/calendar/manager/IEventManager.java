@@ -14,15 +14,16 @@ public interface IEventManager {
    * Add an event into calendar with its respective date. Handling both single event and multiple
    * spanning days event.
    *
-   * @param subject               the given subject.
-   * @param description           the given description.
-   * @param startTime             the given start time.
-   * @param endTime               the given end time.
-   * @param autoDeclineConflicts  the given autoDeclineConflicts.
+   * @param subject              the given subject.
+   * @param description          the given description.
+   * @param startTime            the given start time.
+   * @param endTime              the given end time.
+   * @param autoDeclineConflicts the given autoDeclineConflicts.
    * @throws IllegalArgumentException throws error if the input is invalid.
    */
   void addEvent(String subject, String description, LocalDateTime startTime,
-                      LocalDateTime endTime, boolean autoDeclineConflicts) throws IllegalArgumentException;
+                LocalDateTime endTime, boolean autoDeclineConflicts)
+          throws IllegalArgumentException;
 
   /**
    * Add a recurring events by splitting it into multiple single events, based on the provided
@@ -46,16 +47,17 @@ public interface IEventManager {
    * Edit an existing event on the calendar based on the given input. Also handle the multiple
    * spanning days event case.
    *
-   * @param subject               the given subject.
-   * @param startTime             the given start time.
-   * @param endTime               the given end time.
-   * @param property              the name of the target property.
-   * @param newValue              the new value for the target property.
-   * @param autoDeclineConflicts  the given autoDeclineConflicts.
+   * @param subject              the given subject.
+   * @param startTime            the given start time.
+   * @param endTime              the given end time.
+   * @param property             the name of the target property.
+   * @param newValue             the new value for the target property.
+   * @param autoDeclineConflicts the given autoDeclineConflicts.
    * @throws IllegalArgumentException throws error if the input is invalid
    */
   void editEventSingle(String subject, LocalDateTime startTime, LocalDateTime endTime,
-                             String property, String newValue, boolean autoDeclineConflicts) throws IllegalArgumentException;
+                       String property, String newValue, boolean autoDeclineConflicts)
+          throws IllegalArgumentException;
 
   /**
    * Edit an existing recurring event on the calendar based on the given input. Handle both cases
@@ -67,7 +69,7 @@ public interface IEventManager {
    * @param newValue  the new value for the target property.
    */
   void editEventRecurring(String subject, LocalDateTime startTime, String property,
-                                String newValue);
+                          String newValue);
 
   /**
    * Print all events in the calendar from start time to end time. Handle both cases where

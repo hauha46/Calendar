@@ -14,7 +14,7 @@ public class Interpreter {
   /**
    * Main class for I/O operations handling.
    */
-  public  void run(CommandController commandController) {
+  public void run(CommandController commandController) {
     Scanner scanner = new Scanner(System.in);
 
     while (true) {
@@ -27,12 +27,12 @@ public class Interpreter {
         System.out.println("Exiting the application. Goodbye!");
         break;
       } else if (modeChoice.equals("interactive")) {
-        runInteractiveMode(scanner,commandController);
+        runInteractiveMode(scanner, commandController);
       } else if (modeChoice.equals("headless")) {
         System.out.println("Enter the path to the command file:");
         System.out.print("> ");
         String filePath = scanner.nextLine().trim();
-        runHeadlessMode(filePath,commandController);
+        runHeadlessMode(filePath, commandController);
       } else {
         System.out.println("Invalid mode. Please try again.");
       }
@@ -46,7 +46,7 @@ public class Interpreter {
    *
    * @param scanner I/O scanner
    */
-  private  void runInteractiveMode(Scanner scanner,CommandController commandController) {
+  private void runInteractiveMode(Scanner scanner, CommandController commandController) {
     //CommandController COMMAND_CONTROLLER=commandController;
 
     System.out.println("Interactive mode. Type 'mode' to return to mode selection.");
@@ -72,7 +72,7 @@ public class Interpreter {
    *
    * @param filename Input file name/path.
    */
-  private  void runHeadlessMode(String filename,CommandController commandController) {
+  private void runHeadlessMode(String filename, CommandController commandController) {
     //CommandController COMMAND_CONTROLLER=commandController;
 
     try (Scanner fileScanner = new Scanner(new File(filename))) {

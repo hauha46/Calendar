@@ -28,8 +28,6 @@ public class CommandController {
     this.interpreter = intrepreter;
   }
 
-
-
   /**
    * Starts the interpreter for input handling.
    */
@@ -126,7 +124,8 @@ public class CommandController {
     String targetCalendarName = tokens[index++];
     index++;
     LocalDateTime targetStartDateTime = dateTimeUtils.parseDateTime(tokens[index]);
-    calendarManager.copyCalendarEvent(eventName, startDateTime, targetCalendarName, targetStartDateTime);
+    calendarManager.copyCalendarEvent(
+            eventName, startDateTime, targetCalendarName, targetStartDateTime);
 
   }
 
@@ -138,21 +137,21 @@ public class CommandController {
       index++;
       startDateTime = dateTimeUtils.parseDateToDateTime(tokens[index++]);
       endDateTime = startDateTime.toLocalDate().atTime(LocalTime.of(23, 59));
-    }
-    else if (tokens[index].equals("between")) {
+    } else if (tokens[index].equals("between")) {
       index++;
       startDateTime = dateTimeUtils.parseDateToDateTime(tokens[index++]);
       index++;
-      endDateTime = dateTimeUtils.parseDateToDateTime(tokens[index++]).toLocalDate().atTime(LocalTime.of(23, 59));
-    }
-    else {
+      endDateTime = dateTimeUtils.parseDateToDateTime(
+              tokens[index++]).toLocalDate().atTime(LocalTime.of(23, 59));
+    } else {
       throw new IllegalArgumentException("Unknown command: " + tokens[index]);
     }
     index++;
     String targetCalendarName = tokens[index++];
     index++;
     LocalDateTime targetStartDateTime = dateTimeUtils.parseDateToDateTime((tokens[index]));
-    calendarManager.copyCalendarEvents(startDateTime, endDateTime, targetCalendarName, targetStartDateTime);
+    calendarManager.copyCalendarEvents(
+            startDateTime, endDateTime, targetCalendarName, targetStartDateTime);
 
   }
 
@@ -182,20 +181,20 @@ public class CommandController {
     if (tokens[index].equals("from")) {
       // Handle "create event from ... to ..."
       index++;
-      startDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
+      startDateTime = dateTimeUtils.parseDateTime(tokens[index++]);
       if (!tokens[index].equals("to")) {
         throw new IllegalArgumentException("Expected 'to' after start date/time.");
       }
       index++;
-      endDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
+      endDateTime = dateTimeUtils.parseDateTime(tokens[index++]);
     } else if (tokens[index].equals("on")) {
       // Handle "create event on ..."
       index++;
       String startDateTimeString = tokens[index++];
       try {
-        startDateTime =dateTimeUtils.parseDateTime(startDateTimeString);
+        startDateTime = dateTimeUtils.parseDateTime(startDateTimeString);
       } catch (IllegalArgumentException e) {
-        startDateTime =dateTimeUtils.parseDateToDateTime(startDateTimeString);
+        startDateTime = dateTimeUtils.parseDateToDateTime(startDateTimeString);
       }
       endDateTime = startDateTime.toLocalDate().atTime(LocalTime.of(23, 59));
     } else {
@@ -217,9 +216,9 @@ public class CommandController {
         index++;
         String endDateTimeString = tokens[index++];
         try {
-          endRecurringDateTime =dateTimeUtils.parseDateTime(endDateTimeString);
+          endRecurringDateTime = dateTimeUtils.parseDateTime(endDateTimeString);
         } catch (IllegalArgumentException e) {
-          endRecurringDateTime =dateTimeUtils.parseDateToDateTime(endDateTimeString);
+          endRecurringDateTime = dateTimeUtils.parseDateToDateTime(endDateTimeString);
           endRecurringDateTime = endRecurringDateTime.toLocalDate().atTime(LocalTime.of(23, 59));
         }
       }
@@ -248,12 +247,12 @@ public class CommandController {
 
     if (tokens[index].equals("from")) {
       index++;
-      startDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
+      startDateTime = dateTimeUtils.parseDateTime(tokens[index++]);
       if (!tokens[index].equals("to")) {
         throw new IllegalArgumentException("Expected 'to' after start date/time.");
       }
       index++;
-      endDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
+      endDateTime = dateTimeUtils.parseDateTime(tokens[index++]);
     } else {
       throw new IllegalArgumentException("Expected 'from' after event name.");
     }
@@ -281,7 +280,7 @@ public class CommandController {
 
     if (tokens[index].equals("from")) {
       index++;
-      startDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
+      startDateTime = dateTimeUtils.parseDateTime(tokens[index++]);
       if (!tokens[index].equals("with")) {
         throw new IllegalArgumentException("Expected 'with' after start date/time.");
       }
@@ -305,15 +304,15 @@ public class CommandController {
 
     if (tokens[index].equals("on")) {
       index++;
-      startDateTime =dateTimeUtils.parseDateToDateTime(tokens[index++]);
+      startDateTime = dateTimeUtils.parseDateToDateTime(tokens[index++]);
     } else if (tokens[index].equals("from")) {
       index++;
-      startDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
+      startDateTime = dateTimeUtils.parseDateTime(tokens[index++]);
       if (!tokens[index].equals("to")) {
         throw new IllegalArgumentException("Expected 'to' after start date/time.");
       }
       index++;
-      endDateTime =dateTimeUtils.parseDateTime(tokens[index++]);
+      endDateTime = dateTimeUtils.parseDateTime(tokens[index++]);
     } else {
       throw new IllegalArgumentException("Expected 'on' or 'from' after 'print events'.");
     }
@@ -339,7 +338,7 @@ public class CommandController {
    */
   private void parseShowStatusCommand(String[] tokens) {
     ICalendar calendar = calendarManager.getActiveCalendar();
-    LocalDateTime date =dateTimeUtils.parseDateTime((tokens[3]));
+    LocalDateTime date = dateTimeUtils.parseDateTime((tokens[3]));
     calendar.isBusy(date);
   }
 }

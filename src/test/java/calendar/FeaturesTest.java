@@ -1,12 +1,9 @@
 package calendar;
 
-import org.example.Main;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.PrintStream;
 
 import calendar.controller.CommandController;
@@ -29,13 +26,13 @@ public class FeaturesTest {
   private CommandController commandController;
   private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
   private final PrintStream originalOut = System.out;
-  private  ExportUtils exportUtils;
+  private ExportUtils exportUtils;
 
   /**
    * Setting up and accessing the controller for better accessibility.
    */
   @Before
-  public  void setUp() {
+  public void setUp() {
     try {
       Interpreter view = new Interpreter();
       CalendarManager model = new CalendarManager();
@@ -51,9 +48,7 @@ public class FeaturesTest {
       exportUtils = new ExportUtils();
       // Clear output from setup commands
       outputStream.reset();
-    }
-    catch(Exception e)
-    {
+    } catch (Exception e) {
       throw new AssertionError(e);
     }
   }
@@ -109,7 +104,7 @@ public class FeaturesTest {
 
       assertTrue(outputStream.toString().contains("Meeting"));
 
-    }catch (Exception e) {
+    } catch (Exception e) {
       throw new AssertionError(e);
     }
   }
@@ -126,7 +121,7 @@ public class FeaturesTest {
       String editCommand = "edit calendar --name TempCalendar --property name MainCalendar";
       commandController.parseCommand(editCommand);
 
-    }catch (Exception e) {
+    } catch (Exception e) {
       throw new IllegalArgumentException(e);
     }
   }
@@ -143,7 +138,7 @@ public class FeaturesTest {
       String editCommand = "edit calendar --name TempCalendar1 --property name PersonalCalendar";
       commandController.parseCommand(editCommand);
 
-    }catch (Exception e) {
+    } catch (Exception e) {
       throw new IllegalArgumentException(e);
     }
   }
@@ -174,7 +169,7 @@ public class FeaturesTest {
 
       assertTrue(outputStream.toString().contains("Dinner"));
       assertTrue(outputStream.toString().contains("2025-03-26T01:00"));
-    }catch (Exception e) {
+    } catch (Exception e) {
       throw new AssertionError(e);
     }
   }
@@ -206,7 +201,7 @@ public class FeaturesTest {
 
       assertTrue(outputStream.toString().contains("Meeting"));
       assertTrue(outputStream.toString().contains("2025-03-26T10:00"));
-    }catch (Exception e) {
+    } catch (Exception e) {
       throw new AssertionError(e);
     }
   }
@@ -217,27 +212,27 @@ public class FeaturesTest {
   @Test(expected = IllegalArgumentException.class)
   public void testCopyEventToAnotherCalendarNoEvent() {
 
-      // Create source event
-      //String createEventCommand = "create event Meeting from 2025-03-25T10:00 to 2025-03-25T11:00";
-      //commandController.parseCommand(createEventCommand);
+    // Create source event
+    //String createEventCommand = "create event Meeting from 2025-03-25T10:00 to 2025-03-25T11:00";
+    //commandController.parseCommand(createEventCommand);
 
-      // Create target calendar with different timezone
-      String createCalendarCommand = "create calendar --name TargetCalendar --timezone Europe/Paris";
-      commandController.parseCommand(createCalendarCommand);
+    // Create target calendar with different timezone
+    String createCalendarCommand = "create calendar --name TargetCalendar --timezone Europe/Paris";
+    commandController.parseCommand(createCalendarCommand);
 
-      // Copy event to target calendar
-      String copyCommand = "copy event Meeting on 2025-03-25T10:00 --target TargetCalendar to 2025-03-26T10:00";
-      commandController.parseCommand(copyCommand);
+    // Copy event to target calendar
+    String copyCommand = "copy event Meeting on 2025-03-25T10:00 --target TargetCalendar to 2025-03-26T10:00";
+    commandController.parseCommand(copyCommand);
 
-      // Switch to target calendar and verify event
-      String useCommand = "use calendar --name TargetCalendar";
-      commandController.parseCommand(useCommand);
+    // Switch to target calendar and verify event
+    String useCommand = "use calendar --name TargetCalendar";
+    commandController.parseCommand(useCommand);
 
-      String printCommand = "print events on 2025-03-26";
-      commandController.parseCommand(printCommand);
+    String printCommand = "print events on 2025-03-26";
+    commandController.parseCommand(printCommand);
 
-      assertTrue(outputStream.toString().contains("Meeting"));
-      assertTrue(outputStream.toString().contains("2025-03-26T10:00"));
+    assertTrue(outputStream.toString().contains("Meeting"));
+    assertTrue(outputStream.toString().contains("2025-03-26T10:00"));
 
   }
 
@@ -269,7 +264,7 @@ public class FeaturesTest {
 
       assertTrue(outputStream.toString().contains("Meeting"));
       assertTrue(outputStream.toString().contains("2025-03-26T10:00"));
-    }catch (Exception e) {
+    } catch (Exception e) {
       throw new IllegalArgumentException(e);
     }
   }
@@ -279,41 +274,40 @@ public class FeaturesTest {
    */
   @Test
   public void testCopyEventToAnotherCalendarConflict() {
-    
-      // Create source event
-      String createEventCommand = "create event Meeting from 2025-03-25T10:00 to 2025-03-25T11:00";
-      commandController.parseCommand(createEventCommand);
 
-      // Create target calendar with different timezone
-      String createCalendarCommand = "create calendar --name TargetCalendar --timezone America/New_York";
-      commandController.parseCommand(createCalendarCommand);
+    // Create source event
+    String createEventCommand = "create event Meeting from 2025-03-25T10:00 to 2025-03-25T11:00";
+    commandController.parseCommand(createEventCommand);
+
+    // Create target calendar with different timezone
+    String createCalendarCommand = "create calendar --name TargetCalendar --timezone America/New_York";
+    commandController.parseCommand(createCalendarCommand);
 
 
+    // Switch to target calendar and verify event
+    String useCommand = "use calendar --name TargetCalendar";
+    commandController.parseCommand(useCommand);
 
-      // Switch to target calendar and verify event
-      String useCommand = "use calendar --name TargetCalendar";
-      commandController.parseCommand(useCommand);
+    // Create conflict event
+    String createEventCommand1 = "create event MeetingTarget from 2025-03-25T10:00 to 2025-03-25T11:00";
+    commandController.parseCommand(createEventCommand1);
 
-      // Create conflict event
-      String createEventCommand1 = "create event MeetingTarget from 2025-03-25T10:00 to 2025-03-25T11:00";
-      commandController.parseCommand(createEventCommand1);
+    // Switch to original calendar and verify event
+    String useCommand1 = "use calendar --name MainCalendar";
+    commandController.parseCommand(useCommand1);
+    // Copy event to target calendar
+    String copyCommand = "copy event Meeting on 2025-03-25T10:00 --target TargetCalendar to 2025-03-26T10:00";
+    commandController.parseCommand(copyCommand);
 
-      // Switch to original calendar and verify event
-      String useCommand1 = "use calendar --name MainCalendar";
-      commandController.parseCommand(useCommand1);
-      // Copy event to target calendar
-      String copyCommand = "copy event Meeting on 2025-03-25T10:00 --target TargetCalendar to 2025-03-26T10:00";
-      commandController.parseCommand(copyCommand);
+    // Switch to target calendar and verify event
+    String useCommand2 = "use calendar --name TargetCalendar";
+    commandController.parseCommand(useCommand2);
 
-      // Switch to target calendar and verify event
-      String useCommand2 = "use calendar --name TargetCalendar";
-      commandController.parseCommand(useCommand2);
+    String printCommand = "print events on 2025-03-26";
+    commandController.parseCommand(printCommand);
 
-      String printCommand = "print events on 2025-03-26";
-      commandController.parseCommand(printCommand);
-
-      assertTrue(outputStream.toString().contains("Meeting"));
-      assertTrue(outputStream.toString().contains("2025-03-26T10:00"));
+    assertTrue(outputStream.toString().contains("Meeting"));
+    assertTrue(outputStream.toString().contains("2025-03-26T10:00"));
 
   }
 
@@ -347,8 +341,7 @@ public class FeaturesTest {
       String output = outputStream.toString();
       assertTrue(output.contains("Meeting1"));
       assertTrue(output.contains("Meeting2"));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new AssertionError(e);
     }
   }
@@ -383,8 +376,7 @@ public class FeaturesTest {
       String output = outputStream.toString();
       assertTrue(output.contains("Meeting1"));
       assertTrue(output.contains("Meeting2"));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new AssertionError(e);
     }
   }
@@ -395,30 +387,30 @@ public class FeaturesTest {
   @Test
   public void testCopyEventsSameDayNonExistEvent() {
 
-      // Create multiple events on the same day
-      //String event1 = "create event Meeting1 from 2025-03-25T09:00 to 2025-03-25T10:00";
-      //String event2 = "create event Meeting2 from 2025-03-25T11:00 to 2025-03-25T12:00";
-      //commandController.parseCommand(event1);
-      //commandController.parseCommand(event2);
+    // Create multiple events on the same day
+    //String event1 = "create event Meeting1 from 2025-03-25T09:00 to 2025-03-25T10:00";
+    //String event2 = "create event Meeting2 from 2025-03-25T11:00 to 2025-03-25T12:00";
+    //commandController.parseCommand(event1);
+    //commandController.parseCommand(event2);
 
-      // Create target calendar
-      String createCalendarCommand = "create calendar --name ProjectCalendar --timezone America/New_York";
-      commandController.parseCommand(createCalendarCommand);
+    // Create target calendar
+    String createCalendarCommand = "create calendar --name ProjectCalendar --timezone America/New_York";
+    commandController.parseCommand(createCalendarCommand);
 
-      // Copy all events from that day to target calendar non existant
-      String copyCommand = "copy events on 2025-03-25 --target ProjectCalendar to 2025-04-01";
-      commandController.parseCommand(copyCommand);
+    // Copy all events from that day to target calendar non existant
+    String copyCommand = "copy events on 2025-03-25 --target ProjectCalendar to 2025-04-01";
+    commandController.parseCommand(copyCommand);
 
-      // Verify the copied events
-      String useCommand = "use calendar --name ProjectCalendar";
-      commandController.parseCommand(useCommand);
+    // Verify the copied events
+    String useCommand = "use calendar --name ProjectCalendar";
+    commandController.parseCommand(useCommand);
 
-      String printCommand = "print events on 2025-04-01";
-      commandController.parseCommand(printCommand);
+    String printCommand = "print events on 2025-04-01";
+    commandController.parseCommand(printCommand);
 
-      String output = outputStream.toString();
-      assertFalse(output.contains("Meeting1"));
-      assertFalse(output.contains("Meeting2"));
+    String output = outputStream.toString();
+    assertFalse(output.contains("Meeting1"));
+    assertFalse(output.contains("Meeting2"));
 
   }
 
@@ -455,8 +447,7 @@ public class FeaturesTest {
       assertTrue(output.contains("Meeting1"));
       assertTrue(output.contains("Meeting2"));
       assertTrue(output.contains("Meeting3"));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new AssertionError(e);
     }
   }
@@ -506,7 +497,7 @@ public class FeaturesTest {
     // Create a new controller without the setup that creates calendars
     Interpreter view = new Interpreter();
     CalendarManager model = new CalendarManager();
-    CommandController newController = new CommandController(model,view);
+    CommandController newController = new CommandController(model, view);
 
     // Attempt to create an event without first creating/selecting a calendar
     String createCommand = "create event Meeting from 2025-03-25T10:00 to 2025-03-25T11:00";
@@ -1236,7 +1227,7 @@ public class FeaturesTest {
     try {
       String exportCommand = "export cal testfile.csv";
       commandController.parseCommand(exportCommand);
-    }catch (Exception e) {
+    } catch (Exception e) {
       throw new AssertionError(e);
     }
   }
@@ -1252,12 +1243,13 @@ public class FeaturesTest {
 
       String exportCommand = "export cal mycalendar.csv";
       commandController.parseCommand(exportCommand);
-    }catch (Exception e) {
+    } catch (Exception e) {
       throw new AssertionError(e);
     }
   }
 
   // Invalid Tests
+
   /**
    * Tests invalid start/end date order.
    */
@@ -1373,7 +1365,7 @@ public class FeaturesTest {
       commandController.parseCommand(printCommand);
 
       assertTrue(outputStream.toString().contains("Meeting"));
-    }catch (Exception e) {
+    } catch (Exception e) {
       throw new AssertionError(e);
     }
   }
@@ -1525,12 +1517,4 @@ public class FeaturesTest {
     String input = "  Meeting, with \"team\"  ";
     assertEquals("\"  Meeting, with \"\"team\"\"  \"", exportUtils.escapeCSV(input));
   }
-
-
-
-
-
-
-
-
 }

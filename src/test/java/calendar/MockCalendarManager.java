@@ -2,10 +2,12 @@ package calendar;
 
 import calendar.manager.ICalendarManager;
 import calendar.model.Calendar;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  * This class mock for the CalendarManager , used for isolating classes.
  */

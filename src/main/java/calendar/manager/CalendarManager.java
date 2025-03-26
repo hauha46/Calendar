@@ -32,9 +32,10 @@ public class CalendarManager implements ICalendarManager {
   /**
    * Create a new calendar with the specified name and timezone.
    *
-   * @param name The calendar name
+   * @param name     The calendar name
    * @param timezone The calendar timezone
-   * @throws IllegalArgumentException if a calendar with the name already exists or timezone is invalid
+   * @throws IllegalArgumentException if a calendar with the name already exists or timezone
+   *                                  is invalid
    */
   public void createCalendar(String name, ZoneId timezone) throws IllegalArgumentException {
     this.notIncludeCalendar(name);
@@ -56,12 +57,14 @@ public class CalendarManager implements ICalendarManager {
   /**
    * Edit a property of a calendar.
    *
-   * @param name The calendar name
+   * @param name     The calendar name
    * @param property The property to edit ("name" or "timezone")
-   * @param value The new value for the property
-   * @throws IllegalArgumentException if the calendar doesn't exist, property is invalid, or value is invalid
+   * @param value    The new value for the property
+   * @throws IllegalArgumentException if the calendar doesn't exist, property is invalid, or value
+   *                                  is invalid
    */
-  public void editCalendarProperty(String name, String property, String value) throws IllegalArgumentException {
+  public void editCalendarProperty(
+          String name, String property, String value) throws IllegalArgumentException {
     this.hasCalendar(name);
     Calendar calendar = calendarMap.get(name);
     switch (property.toLowerCase()) {
@@ -74,17 +77,21 @@ public class CalendarManager implements ICalendarManager {
         }
         break;
       case "timezone":
-          ZoneId newTimezone = this.dateTimeUtils.parseZoneId(value);
-          calendar.setAutoDeclineConflicts(false);
-          List<IEvent> foundEvents = calendar.getAllEvents();
-          for (IEvent event : foundEvents) {
-            calendar.removeEvent(event);
-            LocalDateTime convertedStartDateTime = dateTimeUtils.convertTimeZone(event.getStartTime(), calendar.getTimeZone(), newTimezone);
-            LocalDateTime convertedEndDateTime = dateTimeUtils.convertTimeZone(event.getEndTime(), calendar.getTimeZone(), newTimezone);
-            calendar.addEvent(event.getSubject(), event.getDescription(), convertedStartDateTime, convertedEndDateTime);
-          }
-          calendar.setAutoDeclineConflicts(true);
-          calendar.setTimeZone(newTimezone);
+        ZoneId newTimezone = this.dateTimeUtils.parseZoneId(value);
+        calendar.setAutoDeclineConflicts(false);
+        List<IEvent> foundEvents = calendar.getAllEvents();
+        for (IEvent event : foundEvents) {
+          calendar.removeEvent(event);
+          LocalDateTime convertedStartDateTime = dateTimeUtils.convertTimeZone(
+                  event.getStartTime(), calendar.getTimeZone(), newTimezone);
+          LocalDateTime convertedEndDateTime = dateTimeUtils.convertTimeZone(
+                  event.getEndTime(), calendar.getTimeZone(), newTimezone);
+          calendar.addEvent(
+                  event.getSubject(), event.getDescription(), convertedStartDateTime,
+                  convertedEndDateTime);
+        }
+        calendar.setAutoDeclineConflicts(true);
+        calendar.setTimeZone(newTimezone);
         break;
       default:
         throw new IllegalArgumentException("Invalid property: " + property);
@@ -94,16 +101,20 @@ public class CalendarManager implements ICalendarManager {
   /**
    * Copy a specific event from the active calendar to another calendar.
    *
-   * @param eventName           The name of the event to copy
-   * @param startDateTime       The start date and time of the event
-   * @param targetCalendarName  The name of the target calendar
-   * @param targetDateTime      The target date and time for the copied event
-   * @throws IllegalArgumentException if the target calendar doesn't exist or the event can't be found
+   * @param eventName          The name of the event to copy
+   * @param startDateTime      The start date and time of the event
+   * @param targetCalendarName The name of the target calendar
+   * @param targetDateTime     The target date and time for the copied event
+   * @throws IllegalArgumentException if the target calendar doesn't exist or the event can't
+   *                                  be found
    */
-  public void copyCalendarEvent(String eventName, LocalDateTime startDateTime, String targetCalendarName, LocalDateTime targetDateTime) throws IllegalArgumentException {
+  public void copyCalendarEvent(
+          String eventName, LocalDateTime startDateTime, String targetCalendarName,
+          LocalDateTime targetDateTime) throws IllegalArgumentException {
     this.hasCalendar(targetCalendarName);
     LocalDateTime endDateTime = dateTimeUtils.convertToEODDateTime(startDateTime);
-    List<IEvent> foundEvents = getActiveCalendar().searchEvents(eventName, startDateTime, endDateTime);
+    List<IEvent> foundEvents = getActiveCalendar().searchEvents(
+            eventName, startDateTime, endDateTime);
 
     if (foundEvents.isEmpty()) {
       throw new IllegalArgumentException("No events found for " + eventName);
@@ -112,7 +123,8 @@ public class CalendarManager implements ICalendarManager {
     IEvent targetEvent = foundEvents.get(0);
     Duration duration = Duration.between(targetEvent.getStartTime(), targetEvent.getEndTime());
     Calendar targetCalendarInstance = calendarMap.get(targetCalendarName);
-    targetCalendarInstance.addEvent(targetEvent.getSubject(), targetEvent.getDescription(), targetDateTime, targetDateTime.plus(duration));
+    targetCalendarInstance.addEvent(targetEvent.getSubject(), targetEvent.getDescription(),
+            targetDateTime, targetDateTime.plus(duration));
   }
 
   /**
@@ -124,23 +136,30 @@ public class CalendarManager implements ICalendarManager {
    * @param targetDateTime     The target date and time for the copied events
    * @throws IllegalArgumentException if the target calendar doesn't exist
    */
-  public void copyCalendarEvents(LocalDateTime startDateTime, LocalDateTime endDateTime, String targetCalendarName, LocalDateTime targetDateTime) throws IllegalArgumentException {
+  public void copyCalendarEvents(
+          LocalDateTime startDateTime, LocalDateTime endDateTime, String targetCalendarName,
+          LocalDateTime targetDateTime) throws IllegalArgumentException {
     this.hasCalendar(targetCalendarName);
     Calendar targetCalendarInstance = calendarMap.get(targetCalendarName);
     Calendar currentCalendarInstance = getActiveCalendar();
-    List<IEvent> foundEvents = currentCalendarInstance.searchEvents(null, startDateTime, endDateTime);
+    List<IEvent> foundEvents = currentCalendarInstance.searchEvents(
+            null, startDateTime, endDateTime);
     LocalDateTime eventInitialDateTime = dateTimeUtils.convertToSODDateTime(startDateTime);
-    LocalDateTime targetInitialDateTime = dateTimeUtils.convertTimeZone(targetDateTime, getActiveCalendar().getTimeZone(), targetCalendarInstance.getTimeZone());
+    LocalDateTime targetInitialDateTime = dateTimeUtils.convertTimeZone(
+            targetDateTime, getActiveCalendar().getTimeZone(), targetCalendarInstance.getTimeZone());
     List<IEvent> addedEvents = new ArrayList<>();
     try {
       for (IEvent event : foundEvents) {
-        Duration duratiomFromStartTime = Duration.between(eventInitialDateTime, event.getStartTime());
+        Duration duratiomFromStartTime =
+                Duration.between(eventInitialDateTime, event.getStartTime());
         Duration duratiomFromEndTime = Duration.between(eventInitialDateTime, event.getEndTime());
-        targetCalendarInstance.addEvent(event.getSubject(), event.getDescription(), targetInitialDateTime.plus(duratiomFromStartTime), targetInitialDateTime.plus(duratiomFromEndTime));
+        targetCalendarInstance.addEvent(
+                event.getSubject(), event.getDescription(),
+                targetInitialDateTime.plus(duratiomFromStartTime),
+                targetInitialDateTime.plus(duratiomFromEndTime));
         addedEvents.add(event);
       }
-    }
-    catch(IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       for (IEvent event : addedEvents) {
         targetCalendarInstance.removeEvent(event);
       }

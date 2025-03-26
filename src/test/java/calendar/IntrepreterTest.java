@@ -1,15 +1,16 @@
 package calendar;
+
 import calendar.view.Interpreter;
 
 import static org.junit.Assert.*;
-import calendar.MockCommandController;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -108,6 +109,7 @@ public class IntrepreterTest {
 
   /**
    * Tests headless mode execution with a valid command file.
+   *
    * @throws Exception if temporary file creation fails
    */
   @Test
@@ -120,7 +122,7 @@ public class IntrepreterTest {
       assertOutputContains("> ");
       assertOutputContains("Running in headless mode");
       assertTrue(mockController.parseCommandCallCount >= 2);
-      assertOutputContains("Command: " +"print events");
+      assertOutputContains("Command: " + "print events");
       assertTrue("print events".equals(mockController.lastParsedCommand) ||
               "create event Meeting".equals(mockController.lastParsedCommand));
       assertOutputContains("Exit command found. Terminating headless mode.");
@@ -186,6 +188,7 @@ public class IntrepreterTest {
 
   /**
    * Provides test input by using ByteArray to store input.
+   *
    * @param data the input string to simulate
    */
   private void provideInput(String data) {
@@ -194,6 +197,7 @@ public class IntrepreterTest {
 
   /**
    * Special output assertion to check system.out.
+   *
    * @param expected
    */
   private void assertOutputContains(String expected) {
@@ -203,6 +207,7 @@ public class IntrepreterTest {
 
   /**
    * This creates a temporary file and returns its path.
+   *
    * @param content
    * @return the file path.
    * @throws Exception
@@ -215,6 +220,7 @@ public class IntrepreterTest {
 
   /**
    * Gets the captured output content.
+   *
    * @return the output as a string
    */
   private String getOutput() {

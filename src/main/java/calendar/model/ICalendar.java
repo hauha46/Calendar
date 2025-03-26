@@ -73,7 +73,7 @@ public interface ICalendar {
    * @throws IllegalArgumentException throws error if the input is invalid
    */
   void editEventSingle(String subject, LocalDateTime startTime, LocalDateTime endTime,
-                        String property, String newValue) throws IllegalArgumentException;
+                       String property, String newValue) throws IllegalArgumentException;
 
   /**
    * Edit an existing recurring event on the calendar based on the given input. Handle both cases
@@ -85,7 +85,7 @@ public interface ICalendar {
    * @param newValue  the new value for the target property.
    */
   void editEventRecurring(String subject, LocalDateTime startTime, String property,
-                           String newValue);
+                          String newValue);
 
   /**
    * Print all events in the calendar from start time to end time. Handle both cases where

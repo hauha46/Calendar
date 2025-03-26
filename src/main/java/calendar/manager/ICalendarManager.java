@@ -15,7 +15,8 @@ public interface ICalendarManager {
    *
    * @param name     The calendar name
    * @param timezone The calendar timezone
-   * @throws IllegalArgumentException if a calendar with the name already exists or timezone is invalid
+   * @throws IllegalArgumentException if a calendar with the name already exists or timezone
+   *                                  is invalid
    */
   void createCalendar(String name, ZoneId timezone) throws IllegalArgumentException;
 
@@ -33,20 +34,23 @@ public interface ICalendarManager {
    * @param name     The calendar name
    * @param property The property to edit ("name" or "timezone")
    * @param value    The new value for the property
-   * @throws IllegalArgumentException if the calendar doesn't exist, property is invalid, or value is invalid
+   * @throws IllegalArgumentException if the calendar doesn't exist, property is invalid, or value
+   *                                  is invalid
    */
-  void editCalendarProperty(String name, String property, String value) throws IllegalArgumentException;
+  void editCalendarProperty(String name, String property, String value)
+          throws IllegalArgumentException;
 
   /**
    * Copy a specific event from the active calendar to another calendar.
    *
-   * @param eventName           The name of the event to copy
-   * @param startDateTime       The start date and time of the event
-   * @param targetCalendarName  The name of the target calendar
-   * @param targetDateTime      The target date and time for the copied event
-   * @throws IllegalArgumentException if the target calendar doesn't exist or the event can't be found
+   * @param eventName          The name of the event to copy
+   * @param startDateTime      The start date and time of the event
+   * @param targetCalendarName The name of the target calendar
+   * @param targetDateTime     The target date and time for the copied event
+   * @throws IllegalArgumentException if the target calendar doesn't exist or the event can't
+   *                                  be found
    */
-  void copyCalendarEvent(String eventName, LocalDateTime startDateTime, String targetCalendarName, 
+  void copyCalendarEvent(String eventName, LocalDateTime startDateTime, String targetCalendarName,
                          LocalDateTime targetDateTime) throws IllegalArgumentException;
 
   /**
@@ -58,8 +62,9 @@ public interface ICalendarManager {
    * @param targetDateTime     The target date and time for the copied events
    * @throws IllegalArgumentException if the target calendar doesn't exist
    */
-  void copyCalendarEvents(LocalDateTime startDateTime, LocalDateTime endDateTime, 
-                          String targetCalendarName, LocalDateTime targetDateTime) throws IllegalArgumentException;
+  void copyCalendarEvents(LocalDateTime startDateTime, LocalDateTime endDateTime,
+                          String targetCalendarName, LocalDateTime targetDateTime)
+          throws IllegalArgumentException;
 
   /**
    * Get the active calendar.
