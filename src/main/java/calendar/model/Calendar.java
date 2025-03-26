@@ -12,7 +12,7 @@ import calendar.manager.EventManager;
 public class Calendar implements ICalendar {
   private ZoneId timeZone;
   private boolean autoDeclineConflicts;
-  private final EventManager eventManager;
+  private final IEventManager eventManager;
 
   /**
    * Construct a calendar with a name and timezone.
