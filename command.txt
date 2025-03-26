@@ -12,8 +12,8 @@ edit events name OldReview from 2023-12-17T10:00 with CodeReview
 print events from 2023-10-10T08:00 to 2023-10-10T12:00
 print events on 2023-11-10
 create calendar --name TargetCalendar --timezone America/New_York
-edit calendar --name MainCalendar --property name PersonalCalendar
-edit calendar --name MainCalendar --property timezone Europe/Paris
+edit calendar --name PersonalCalendar --property name PersonalCalendar
+edit calendar --name Calendar --property timezone Europe/Paris
 create event Meeting from 2025-03-25T10:00 to 2025-03-25T11:00
 copy event Meeting on 2025-03-25T10:00 --target TargetCalendar to 2025-03-26T10:00
 create event Meeting1 from 2025-03-25T09:00 to 2025-03-25T10:00
