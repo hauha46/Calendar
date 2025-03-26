@@ -1,4 +1,4 @@
-package controller;
+package calendar.controller;
 
 import calendar.controller.CommandController;
 import calendar.manager.CalendarManager;

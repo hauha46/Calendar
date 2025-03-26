@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import calendar.manager.CalendarManager;
 import calendar.manager.ICalendarManager;
 import calendar.model.Calendar;
+import calendar.model.ICalendar;
 import calendar.utils.DateTimeUtils;
 import calendar.view.Interpreter;
 
@@ -161,7 +162,7 @@ public class CommandController {
    * @param tokens the given input parameters.
    */
   private void parseCreateEventCommand(String[] tokens) {
-    Calendar calendar = calendarManager.getActiveCalendar();
+    ICalendar calendar = calendarManager.getActiveCalendar();
     int index = 2;
     boolean autoDecline = false;
     String eventName;
@@ -238,7 +239,7 @@ public class CommandController {
    * @param tokens the given input parameters.
    */
   private void parseEditEventCommand(String[] tokens) {
-    Calendar calendar = calendarManager.getActiveCalendar();
+    ICalendar calendar = calendarManager.getActiveCalendar();
     int index = 2;
     String propertyName = tokens[index++];
     String eventName = tokens[index++];
@@ -271,7 +272,7 @@ public class CommandController {
    * @param tokens the given input parameters.
    */
   private void parseEditEventsCommand(String[] tokens) {
-    Calendar calendar = calendarManager.getActiveCalendar();
+    ICalendar calendar = calendarManager.getActiveCalendar();
     int index = 2;
     String propertyName = tokens[index++];
     String eventName = tokens[index++];
@@ -297,7 +298,7 @@ public class CommandController {
    * @param tokens the given input parameters.
    */
   private void parsePrintEventsCommand(String[] tokens) {
-    Calendar calendar = calendarManager.getActiveCalendar();
+    ICalendar calendar = calendarManager.getActiveCalendar();
     int index = 2;
     LocalDateTime startDateTime;
     LocalDateTime endDateTime = null;
@@ -326,7 +327,7 @@ public class CommandController {
    * @param tokens the given input parameters.
    */
   private void parseExportCalCommand(String[] tokens) {
-    Calendar calendar = calendarManager.getActiveCalendar();
+    ICalendar calendar = calendarManager.getActiveCalendar();
     String fileName = tokens[2];
     calendar.exportCSV(fileName);
   }
@@ -337,7 +338,7 @@ public class CommandController {
    * @param tokens the given input parameters.
    */
   private void parseShowStatusCommand(String[] tokens) {
-    Calendar calendar = calendarManager.getActiveCalendar();
+    ICalendar calendar = calendarManager.getActiveCalendar();
     LocalDateTime date =dateTimeUtils.parseDateTime((tokens[3]));
     calendar.isBusy(date);
   }

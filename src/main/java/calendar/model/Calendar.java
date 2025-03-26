@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.List;
 
 import calendar.manager.EventManager;
+import calendar.manager.IEventManager;
 
 /**
  * A model class representing a calendar with events and timezone.

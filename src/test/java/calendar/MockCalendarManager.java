@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * This class mock for the CalendarManager , used for isolating classes.
+ */
 public class MockCalendarManager implements ICalendarManager {
   public Map<String, Calendar> calendars = new HashMap<>();
   public Calendar activeCalendar;
