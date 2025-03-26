@@ -92,6 +92,11 @@ public class CommandController {
     }
   }
 
+  /**
+   * Input mapping function for create calendar commands.
+   * 
+   * @param tokens the given input parameters.
+   */
   private void parseCreateCalendarCommand(String[] tokens) {
     int index = 3;
     String calendarName = tokens[index++];
@@ -100,12 +105,22 @@ public class CommandController {
     calendarManager.createCalendar(calendarName, calendarTimeZone);
   }
 
+  /**
+   * Input mapping function for use calendar commands.
+   * 
+   * @param tokens the given input parameters.
+   */
   private void parseUseCalendarCommand(String[] tokens) {
     int index = 3;
     String calendarName = tokens[index];
     calendarManager.useCalendar(calendarName);
   }
 
+  /**
+   * Input mapping function for edit calendar commands.
+   * 
+   * @param tokens the given input parameters.
+   */
   private void parseEditCalendarCommand(String[] tokens) {
     int index = 3;
     String calendarName = tokens[index++];
@@ -115,6 +130,11 @@ public class CommandController {
     calendarManager.editCalendarProperty(calendarName, propertyName, newValue);
   }
 
+  /**
+   * Input mapping function for copy event commands.
+   * 
+   * @param tokens the given input parameters.
+   */
   private void parseCopyEventCommand(String[] tokens) {
     int index = 2;
     String eventName = tokens[index++];
@@ -129,6 +149,12 @@ public class CommandController {
 
   }
 
+  /**
+   * Input mapping function for copy events commands.
+   * 
+   * @param tokens the given input parameters.
+   * @throws IllegalArgumentException if the command format is unknown
+   */
   private void parseCopyEventsCommand(String[] tokens) {
     int index = 2;
     LocalDateTime startDateTime;
