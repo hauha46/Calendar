@@ -89,7 +89,8 @@ public class DateTimeUtils {
    * @param targetZone the target timezone to convert to
    * @return the converted LocalDateTime in the target timezone
    */
-  public LocalDateTime convertTimeZone(LocalDateTime dateTime, ZoneId sourceZone, ZoneId targetZone) {
+  public LocalDateTime convertTimeZone(
+          LocalDateTime dateTime, ZoneId sourceZone, ZoneId targetZone) {
     if (dateTime == null || sourceZone == null || targetZone == null) {
       throw new IllegalArgumentException("DateTime and timezones cannot be null");
     }

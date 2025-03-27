@@ -146,7 +146,8 @@ public class CalendarManager implements ICalendarManager {
             null, startDateTime, endDateTime);
     LocalDateTime eventInitialDateTime = dateTimeUtils.convertToSODDateTime(startDateTime);
     LocalDateTime targetInitialDateTime = dateTimeUtils.convertTimeZone(
-            targetDateTime, getActiveCalendar().getTimeZone(), targetCalendarInstance.getTimeZone());
+            targetDateTime, getActiveCalendar().getTimeZone(),
+            targetCalendarInstance.getTimeZone());
     List<IEvent> addedEvents = new ArrayList<>();
     try {
       for (IEvent event : foundEvents) {

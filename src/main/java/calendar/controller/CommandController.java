@@ -4,9 +4,7 @@ import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import calendar.manager.CalendarManager;
 import calendar.manager.ICalendarManager;
-import calendar.model.Calendar;
 import calendar.model.ICalendar;
 import calendar.utils.DateTimeUtils;
 import calendar.view.Interpreter;
@@ -189,7 +187,7 @@ public class CommandController {
   private void parseCreateEventCommand(String[] tokens) {
     ICalendar calendar = calendarManager.getActiveCalendar();
     int index = 2;
-    boolean autoDecline = false;
+    boolean autoDecline = true;
     String eventName;
     LocalDateTime startDateTime;
     LocalDateTime endDateTime;

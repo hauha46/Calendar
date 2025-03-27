@@ -40,7 +40,8 @@ public class FeaturesTest {
       System.setOut(new PrintStream(outputStream));
 
       // Create a default calendar and set it as active for all tests
-      String createCalendarCommand = "create calendar --name MainCalendar --timezone America/New_York";
+      String createCalendarCommand = "" +
+              "create calendar --name MainCalendar --timezone America/New_York";
       commandController.parseCommand(createCalendarCommand);
 
       String useCalendarCommand = "use calendar --name MainCalendar";
@@ -185,11 +186,13 @@ public class FeaturesTest {
       commandController.parseCommand(createEventCommand);
 
       // Create target calendar with different timezone
-      String createCalendarCommand = "create calendar --name TargetCalendar --timezone Europe/Paris";
+      String createCalendarCommand =
+              "create calendar --name TargetCalendar --timezone Europe/Paris";
       commandController.parseCommand(createCalendarCommand);
 
       // Copy event to target calendar
-      String copyCommand = "copy event Meeting on 2025-03-25T10:00 --target TargetCalendar to 2025-03-26T10:00";
+      String copyCommand =
+              "copy event Meeting on 2025-03-25T10:00 --target TargetCalendar to 2025-03-26T10:00";
       commandController.parseCommand(copyCommand);
 
       // Switch to target calendar and verify event
@@ -217,11 +220,13 @@ public class FeaturesTest {
     //commandController.parseCommand(createEventCommand);
 
     // Create target calendar with different timezone
-    String createCalendarCommand = "create calendar --name TargetCalendar --timezone Europe/Paris";
+    String createCalendarCommand =
+            "create calendar --name TargetCalendar --timezone Europe/Paris";
     commandController.parseCommand(createCalendarCommand);
 
     // Copy event to target calendar
-    String copyCommand = "copy event Meeting on 2025-03-25T10:00 --target TargetCalendar to 2025-03-26T10:00";
+    String copyCommand =
+            "copy event Meeting on 2025-03-25T10:00 --target TargetCalendar to 2025-03-26T10:00";
     commandController.parseCommand(copyCommand);
 
     // Switch to target calendar and verify event
@@ -238,7 +243,7 @@ public class FeaturesTest {
 
 
   /**
-   * Copying event to calendar which does not exist
+   * Copying event to calendar which does not exist.
    */
   @Test(expected = IllegalArgumentException.class)
   public void testCopyEventToAnotherCalendarNonExist() {
@@ -248,11 +253,13 @@ public class FeaturesTest {
       commandController.parseCommand(createEventCommand);
 
       // Create target calendar with different timezone
-      String createCalendarCommand = "create calendar --name TargetCalendar --timezone Europe/Paris";
+      String createCalendarCommand =
+              "create calendar --name TargetCalendar --timezone Europe/Paris";
       commandController.parseCommand(createCalendarCommand);
 
       // Copy event to target calendar
-      String copyCommand = "copy event Meeting on 2025-03-25T10:00 --target TargetCalendar1 to 2025-03-26T10:00";
+      String copyCommand =
+              "copy event Meeting on 2025-03-25T10:00 --target TargetCalendar1 to 2025-03-26T10:00";
       commandController.parseCommand(copyCommand);
 
       // Switch to target calendar and verify event
@@ -280,7 +287,8 @@ public class FeaturesTest {
     commandController.parseCommand(createEventCommand);
 
     // Create target calendar with different timezone
-    String createCalendarCommand = "create calendar --name TargetCalendar --timezone America/New_York";
+    String createCalendarCommand =
+            "create calendar --name TargetCalendar --timezone America/New_York";
     commandController.parseCommand(createCalendarCommand);
 
 
@@ -289,14 +297,16 @@ public class FeaturesTest {
     commandController.parseCommand(useCommand);
 
     // Create conflict event
-    String createEventCommand1 = "create event MeetingTarget from 2025-03-25T10:00 to 2025-03-25T11:00";
+    String createEventCommand1 =
+            "create event MeetingTarget from 2025-03-25T10:00 to 2025-03-25T11:00";
     commandController.parseCommand(createEventCommand1);
 
     // Switch to original calendar and verify event
     String useCommand1 = "use calendar --name MainCalendar";
     commandController.parseCommand(useCommand1);
     // Copy event to target calendar
-    String copyCommand = "copy event Meeting on 2025-03-25T10:00 --target TargetCalendar to 2025-03-26T10:00";
+    String copyCommand =
+            "copy event Meeting on 2025-03-25T10:00 --target TargetCalendar to 2025-03-26T10:00";
     commandController.parseCommand(copyCommand);
 
     // Switch to target calendar and verify event
@@ -324,7 +334,8 @@ public class FeaturesTest {
       commandController.parseCommand(event2);
 
       // Create target calendar
-      String createCalendarCommand = "create calendar --name ProjectCalendar --timezone America/New_York";
+      String createCalendarCommand =
+              "create calendar --name ProjectCalendar --timezone America/New_York";
       commandController.parseCommand(createCalendarCommand);
 
       // Copy all events from that day to target calendar
@@ -359,7 +370,8 @@ public class FeaturesTest {
       commandController.parseCommand(event2);
 
       // Create target calendar
-      String createCalendarCommand = "create calendar --name ProjectCalendar --timezone America/New_York";
+      String createCalendarCommand =
+              "create calendar --name ProjectCalendar --timezone America/New_York";
       commandController.parseCommand(createCalendarCommand);
 
       // Copy all events from that day to target calendar non existant
@@ -394,7 +406,8 @@ public class FeaturesTest {
     //commandController.parseCommand(event2);
 
     // Create target calendar
-    String createCalendarCommand = "create calendar --name ProjectCalendar --timezone America/New_York";
+    String createCalendarCommand =
+            "create calendar --name ProjectCalendar --timezone America/New_York";
     commandController.parseCommand(createCalendarCommand);
 
     // Copy all events from that day to target calendar non existant
@@ -429,11 +442,13 @@ public class FeaturesTest {
       commandController.parseCommand(event3);
 
       // Create target calendar
-      String createCalendarCommand = "create calendar --name FutureCalendar --timezone America/New_York";
+      String createCalendarCommand =
+              "create calendar --name FutureCalendar --timezone America/New_York";
       commandController.parseCommand(createCalendarCommand);
 
       // Copy all events between dates
-      String copyCommand = "copy events between 2025-03-25 and 2025-03-27 --target FutureCalendar to 2025-04-01";
+      String copyCommand =
+              "copy events between 2025-03-25 and 2025-03-27 --target FutureCalendar to 2025-04-01";
       commandController.parseCommand(copyCommand);
 
       // Verify the copied events
@@ -464,7 +479,8 @@ public class FeaturesTest {
     commandController.parseCommand(event2);
 
     // Create target calendar (correct name)
-    String createCalendarCommand = "create calendar --name ProjectCalendar --timezone America/New_York";
+    String createCalendarCommand =
+            "create calendar --name ProjectCalendar --timezone America/New_York";
     commandController.parseCommand(createCalendarCommand);
 
     // Attempt to copy to non-existent calendar
@@ -786,7 +802,8 @@ public class FeaturesTest {
     String createRecurringCommand =
             "create event Standup from 2023-10-10T09:00 to 2023-10-10T09:30 repeats TR for 5";
     Exception exception = assertThrows(
-            IllegalArgumentException.class, () -> commandController.parseCommand(createRecurringCommand)
+            IllegalArgumentException.class, () -> commandController.parseCommand(
+                    createRecurringCommand)
     );
     assertEquals("Recurring event series conflicts with existing events.",
             exception.getMessage());
@@ -1082,7 +1099,8 @@ public class FeaturesTest {
             outputStream.toString().replaceAll("\\R", "\n").trim());
 
     // Additionally verify the conflict error message was shown
-    assertTrue(outputStream.toString().contains("Recurring event series conflicts with existing events"));
+    assertTrue(outputStream.toString().contains(
+            "Recurring event series conflicts with existing events"));
   }
 
 
@@ -1227,6 +1245,8 @@ public class FeaturesTest {
     try {
       String exportCommand = "export cal testfile.csv";
       commandController.parseCommand(exportCommand);
+      assertEquals(
+              "Calendar exported successfully to testfile.csv", outputStream.toString().trim());
     } catch (Exception e) {
       throw new AssertionError(e);
     }
@@ -1243,6 +1263,8 @@ public class FeaturesTest {
 
       String exportCommand = "export cal mycalendar.csv";
       commandController.parseCommand(exportCommand);
+      assertEquals(
+              "Calendar exported successfully to mycalendar.csv", outputStream.toString().trim());
     } catch (Exception e) {
       throw new AssertionError(e);
     }
@@ -1420,6 +1442,7 @@ public class FeaturesTest {
    */
   @Test
   public void testEscapeCSVNullInput() {
+
     assertEquals("", exportUtils.escapeCSV(null));
   }
 
@@ -1428,6 +1451,7 @@ public class FeaturesTest {
    */
   @Test
   public void testEscapeCSVEmptyString() {
+
     assertEquals("", exportUtils.escapeCSV(""));
   }
 

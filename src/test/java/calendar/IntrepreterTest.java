@@ -2,7 +2,6 @@ package calendar;
 
 import calendar.view.Interpreter;
 
-import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,6 +13,10 @@ import java.nio.file.Path;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for the Intrepreter, checking its functions.
@@ -123,8 +126,8 @@ public class IntrepreterTest {
       assertOutputContains("Running in headless mode");
       assertTrue(mockController.parseCommandCallCount >= 2);
       assertOutputContains("Command: " + "print events");
-      assertTrue("print events".equals(mockController.lastParsedCommand) ||
-              "create event Meeting".equals(mockController.lastParsedCommand));
+      assertTrue("print events".equals(mockController.lastParsedCommand)
+              || "create event Meeting".equals(mockController.lastParsedCommand));
       assertOutputContains("Exit command found. Terminating headless mode.");
     } finally {
       Files.deleteIfExists(tempFile);
@@ -195,23 +198,11 @@ public class IntrepreterTest {
     System.setIn(new ByteArrayInputStream(data.getBytes()));
   }
 
-  /**
-   * Special output assertion to check system.out.
-   *
-   * @param expected
-   */
   private void assertOutputContains(String expected) {
     assertTrue("Output should contain: " + expected,
             outContent.toString().contains(expected));
   }
 
-  /**
-   * This creates a temporary file and returns its path.
-   *
-   * @param content
-   * @return the file path.
-   * @throws Exception
-   */
   private Path createTempFile(String content) throws Exception {
     Path tempFile = Files.createTempFile("test-commands", ".txt");
     Files.writeString(tempFile, content);

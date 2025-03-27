@@ -42,14 +42,16 @@ public class MockCalendarManager implements ICalendarManager {
   public void copyCalendarEvent(String eventName, LocalDateTime startDateTime,
                                 String targetCalendarName, LocalDateTime targetStartDateTime) {
     lastMethodCalled = "copyCalendarEvent";
-    lastMethodArgs = new Object[]{eventName, startDateTime, targetCalendarName, targetStartDateTime};
+    lastMethodArgs =
+            new Object[]{eventName, startDateTime, targetCalendarName, targetStartDateTime};
   }
 
   @Override
   public void copyCalendarEvents(LocalDateTime startDateTime, LocalDateTime endDateTime,
                                  String targetCalendarName, LocalDateTime targetStartDateTime) {
     lastMethodCalled = "copyCalendarEvents";
-    lastMethodArgs = new Object[]{startDateTime, endDateTime, targetCalendarName, targetStartDateTime};
+    lastMethodArgs =
+            new Object[]{startDateTime, endDateTime, targetCalendarName, targetStartDateTime};
   }
 
   @Override
