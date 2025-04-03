@@ -4,6 +4,7 @@ import calendar.model.Calendar;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 /**
  * Interface for managing multiple calendars. Provides operations for creating, editing,
@@ -73,4 +74,6 @@ public interface ICalendarManager {
    * @throws IllegalStateException if no calendar is active
    */
   Calendar getActiveCalendar() throws IllegalStateException;
+
+  List<String> getAllCalendarNames();
 }

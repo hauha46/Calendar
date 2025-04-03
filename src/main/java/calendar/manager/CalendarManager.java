@@ -183,6 +183,10 @@ public class CalendarManager implements ICalendarManager {
     return calendarMap.get(activeCalendarName);
   }
 
+  public List<String> getAllCalendarNames() {
+    return new ArrayList<>(calendarMap.keySet());
+  }
+
   /**
    * Check if a calendar with the given name exists.
    *
