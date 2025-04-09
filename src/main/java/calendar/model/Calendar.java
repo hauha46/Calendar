@@ -171,6 +171,15 @@ public class Calendar implements ICalendar {
   }
 
   /**
+   * Get eventManger.
+   *
+   * @return the eventManager.
+   */
+  public IEventManager getEventManager() {
+    return eventManager;
+  }
+
+  /**
    * Remove an event from the current calendar.
    *
    * @param event the given event.

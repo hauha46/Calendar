@@ -11,9 +11,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import calendar.manager.ICalendarManager;
+import calendar.model.Calendar;
 import calendar.model.ICalendar;
 import calendar.model.IEvent;
 import calendar.utils.DateTimeUtils;
+import calendar.utils.EventsExporterFactory;
+import calendar.utils.ExportEvents;
 
 
 public class SwingController {
@@ -107,8 +110,16 @@ public class SwingController {
   }
   
   public void exportCalendarToCSV(String fileName) {
-    ICalendar calendar = calendarManager.getActiveCalendar();
-    calendar.exportCSV(fileName);
+    Calendar calendar = calendarManager.getActiveCalendar();
+    String format = "csv";
+    ExportEvents exporter = EventsExporterFactory.getExporter(format);
+    String exportedContent = exporter.exportEvents(calendar.getEventManager());
+
+    try (java.io.PrintWriter out = new java.io.PrintWriter(fileName)) {
+      out.print(exportedContent);
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Error exporting calendar: " + e.getMessage(), e);
+    }
   }
 
   public void importCalendarFromCSV(String fileName) {

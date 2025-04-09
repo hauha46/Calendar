@@ -5,8 +5,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import calendar.manager.ICalendarManager;
+import calendar.manager.IEventManager;
+import calendar.model.Calendar;
 import calendar.model.ICalendar;
 import calendar.utils.DateTimeUtils;
+import calendar.utils.EventsExporterFactory;
+import calendar.utils.ExportEvents;
 import calendar.view.Interpreter;
 
 /**
@@ -350,9 +354,23 @@ public class CommandController {
    * @param tokens the given input parameters.
    */
   private void parseExportCalCommand(String[] tokens) {
-    ICalendar calendar = calendarManager.getActiveCalendar();
+    Calendar calendar = calendarManager.getActiveCalendar();
     String fileName = tokens[2];
-    calendar.exportCSV(fileName);
+
+    String format = "csv";
+    int dotIndex = fileName.lastIndexOf('.');
+    if (dotIndex != -1 && dotIndex < fileName.length() - 1) {
+      format = fileName.substring(dotIndex + 1);
+    }
+
+    ExportEvents exporter = EventsExporterFactory.getExporter(format);
+    String exportedContent = exporter.exportEvents(calendar.getEventManager());
+
+    try (java.io.PrintWriter out = new java.io.PrintWriter(fileName)) {
+      out.print(exportedContent);
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Error exporting calendar: " + e.getMessage(), e);
+    }
   }
 
   /**

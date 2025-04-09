@@ -20,8 +20,8 @@ public class Interpreter {
    */
   public void run(CommandController commandController) {
     Scanner scanner = new Scanner(System.in);
-
-    while (true) {
+    boolean running = true;
+    while (running) {
       System.out.println("Welcome to the Calendar Application!");
       System.out.println("Select mode: 'interactive', 'headless', 'gui' or 'exit'");
       System.out.print("> ");
@@ -29,18 +29,17 @@ public class Interpreter {
 
       if (modeChoice.equals("exit")) {
         System.out.println("Exiting the application. Goodbye!");
-        break;
+        running = false;
       }else if (modeChoice.equals("gui")) {
-        System.out.println("Launching GUI mode. Close the GUI window to return to the main menu.");
+        System.out.println("Launching GUI mode. CLI will exit immediately.");
         try {
           ICalendarManager model = commandController.getCalendarManager();
           SwingController swingController = new SwingController(model);
-
-          final SwingUI[] guiHolder = new SwingUI[1];
-          SwingUtilities.invokeAndWait(() -> {
-            guiHolder[0] = SwingUI.createAndShowGUI(swingController);
+          SwingUtilities.invokeLater(() -> {
+            SwingUI.createAndShowGUI(swingController);
           });
-          guiHolder[0].waitForClose();
+
+          running = false;
         } catch (Exception e) {
           System.out.println("Error launching GUI: " + e.getMessage());
         }
@@ -56,8 +55,6 @@ public class Interpreter {
         System.out.println("Invalid mode. Please try again.");
       }
     }
-
-    scanner.close();
   }
 
   /**

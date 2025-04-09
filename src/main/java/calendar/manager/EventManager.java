@@ -326,6 +326,8 @@ public class EventManager implements IEventManager {
     }
   }
 
+
+
   /**
    * Print out the status based on a given date time, whether it's busy or available.
    *
@@ -396,6 +398,15 @@ public class EventManager implements IEventManager {
       }
     }
     return foundEvents;
+  }
+
+  /**
+   * Get the eventManager.
+   *
+   * @return the list of found events.
+   */
+  public IEventManager getEventManager() {
+    return this;
   }
 
   /**

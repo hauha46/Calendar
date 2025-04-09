@@ -6,6 +6,7 @@ import calendar.model.Calendar;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,5 +59,10 @@ public class MockCalendarManager implements ICalendarManager {
   public Calendar getActiveCalendar() {
     lastMethodCalled = "getActiveCalendar";
     return activeCalendar;
+  }
+
+  @Override
+  public List<String> getAllCalendarNames() {
+    return List.of();
   }
 }
