@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import calendar.manager.ICalendarManager;
-import calendar.manager.IEventManager;
 import calendar.model.Calendar;
 import calendar.model.ICalendar;
 import calendar.utils.DateTimeUtils;
@@ -35,6 +34,15 @@ public class CommandController {
    */
   public void start() {
     interpreter.run(this);
+  }
+
+  /**
+   * Returns the calendar manager instance.
+   * 
+   * @return the calendar manager
+   */
+  public ICalendarManager getCalendarManager() {
+    return calendarManager;
   }
 
   /**
@@ -259,7 +267,6 @@ public class CommandController {
     }
   }
 
-
   /**
    * Input mapping functions for edit event commands.
    *
@@ -382,14 +389,5 @@ public class CommandController {
     ICalendar calendar = calendarManager.getActiveCalendar();
     LocalDateTime date = dateTimeUtils.parseDateTime((tokens[3]));
     calendar.isBusy(date);
-  }
-
-  /**
-   *
-   * Method , used to pass the calendarManager to the Interpreter to maintain sync.
-   * @return
-   */
-  public ICalendarManager getCalendarManager() {
-    return calendarManager;
   }
 }

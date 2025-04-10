@@ -11,12 +11,14 @@ import calendar.controller.SwingController;
 import calendar.manager.ICalendarManager;
 
 /**
- * The class for handling I/O input from keyboard.
+ * The class for handling I/O input from keyboard or file.
  */
 public class Interpreter {
 
   /**
-   * Main class for I/O operations handling.
+   * Main method for I/O operations handling with mode selection UI.
+   * 
+   * @param commandController the command controller
    */
   public void run(CommandController commandController) {
     Scanner scanner = new Scanner(System.in);
@@ -58,13 +60,57 @@ public class Interpreter {
   }
 
   /**
+   * Starts the application directly in interactive mode.
+   * This is intended to be called from the Main class when started with the --mode interactive flag.
+   *
+   * @param commandController the command controller
+   */
+  public void startInteractiveMode(CommandController commandController) {
+    System.out.println("Starting interactive CLI mode...");
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("Welcome to the Calendar Application!");
+    System.out.println("Enter commands or 'exit' to quit:");
+    
+    while (true) {
+      System.out.print("> ");
+      String input = scanner.nextLine().trim();
+      
+      if (input.equalsIgnoreCase("exit")) {
+        System.out.println("Exiting the application. Goodbye!");
+        break;
+      }
+      
+      try {
+        commandController.parseCommand(input);
+      } catch (IllegalArgumentException e) {
+        System.out.println("Error: " + e.getMessage());
+      }
+    }
+  }
+
+  /**
+   * Executes a script file directly and then exits.
+   * This is intended to be called from the Main class when started with the --mode headless flag.
+   *
+   * @param scriptFilePath path to the script file
+   * @param commandController the command controller
+   */
+  public void executeScriptFile(String scriptFilePath, CommandController commandController) {
+    try {
+      runHeadlessMode(scriptFilePath, commandController);
+    } catch (Exception e) {
+      System.err.println("Error executing script file: " + e.getMessage());
+      System.exit(1);
+    }
+  }
+
+  /**
    * Interactive mode handling. Will take commands from user input.
    *
    * @param scanner I/O scanner
+   * @param commandController the command controller
    */
   private void runInteractiveMode(Scanner scanner, CommandController commandController) {
-    //CommandController COMMAND_CONTROLLER=commandController;
-
     System.out.println("Interactive mode. Type 'mode' to return to mode selection.");
     while (true) {
       System.out.print("> ");
@@ -88,10 +134,9 @@ public class Interpreter {
    * Headless mode handling. Will take commands from file input.
    *
    * @param filename Input file name/path.
+   * @param commandController the command controller
    */
   private void runHeadlessMode(String filename, CommandController commandController) {
-    //CommandController COMMAND_CONTROLLER=commandController;
-
     try (Scanner fileScanner = new Scanner(new File(filename))) {
       System.out.println("Running in headless mode with file: " + filename);
 
