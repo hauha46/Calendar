@@ -5,6 +5,9 @@ import java.time.format.DateTimeFormatter;
 import calendar.manager.IEventManager;
 import calendar.model.IEvent;
 
+/**
+ * Class exports the calendar into CSV format.
+ */
 public class ExportCSV implements ExportEvents{
 
   @Override

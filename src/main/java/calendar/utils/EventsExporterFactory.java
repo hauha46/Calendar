@@ -1,5 +1,8 @@
 package calendar.utils;
 
+/**
+ * Keeps track of all the file types that are present.
+ */
 public class EventsExporterFactory {
 
   /**

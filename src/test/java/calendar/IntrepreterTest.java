@@ -57,7 +57,7 @@ public class IntrepreterTest {
 
     String output = getOutput();
     assertTrue(output.contains("Welcome to the Calendar Application!"));
-    assertTrue(output.contains("Select mode: 'interactive', 'headless', or 'exit'"));
+    assertTrue(output.contains("Select mode: 'interactive', 'headless', 'gui' or 'exit'"));
     assertTrue(output.contains("> "));
   }
 

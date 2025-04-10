@@ -1,6 +1,7 @@
 package calendar.manager;
 
 import calendar.model.Calendar;
+import calendar.model.ICalendar;
 import calendar.model.IEvent;
 import calendar.utils.DateTimeUtils;
 
@@ -16,7 +17,7 @@ import java.util.Map;
  * Manager class for handling multiple calendars.
  */
 public class CalendarManager implements ICalendarManager {
-  private Map<String, Calendar> calendarMap;
+  private Map<String, ICalendar> calendarMap;
   private DateTimeUtils dateTimeUtils;
   private String activeCalendarName;
 
@@ -67,7 +68,7 @@ public class CalendarManager implements ICalendarManager {
   public void editCalendarProperty(
           String name, String property, String value) throws IllegalArgumentException {
     this.hasCalendar(name);
-    Calendar calendar = calendarMap.get(name);
+    ICalendar calendar = calendarMap.get(name);
     switch (property.toLowerCase()) {
       case "name":
         this.notIncludeCalendar(value);
@@ -123,7 +124,7 @@ public class CalendarManager implements ICalendarManager {
 
     IEvent targetEvent = foundEvents.get(0);
     Duration duration = Duration.between(targetEvent.getStartTime(), targetEvent.getEndTime());
-    Calendar targetCalendarInstance = calendarMap.get(targetCalendarName);
+    ICalendar targetCalendarInstance = calendarMap.get(targetCalendarName);
     targetCalendarInstance.addEvent(targetEvent.getSubject(), targetEvent.getDescription(),
             targetDateTime, targetDateTime.plus(duration));
   }
@@ -141,8 +142,8 @@ public class CalendarManager implements ICalendarManager {
           LocalDateTime startDateTime, LocalDateTime endDateTime, String targetCalendarName,
           LocalDateTime targetDateTime) throws IllegalArgumentException {
     this.hasCalendar(targetCalendarName);
-    Calendar targetCalendarInstance = calendarMap.get(targetCalendarName);
-    Calendar currentCalendarInstance = getActiveCalendar();
+    ICalendar targetCalendarInstance = calendarMap.get(targetCalendarName);
+    ICalendar currentCalendarInstance = getActiveCalendar();
     List<IEvent> foundEvents = currentCalendarInstance.searchEvents(
             null, startDateTime, endDateTime);
     LocalDateTime eventInitialDateTime = dateTimeUtils.convertToSODDateTime(startDateTime);
@@ -181,7 +182,7 @@ public class CalendarManager implements ICalendarManager {
       throw new IllegalStateException("No active calendar selected");
     }
 
-    return calendarMap.get(activeCalendarName);
+    return (Calendar)calendarMap.get(activeCalendarName);
   }
 
   public List<String> getAllCalendarNames() {
