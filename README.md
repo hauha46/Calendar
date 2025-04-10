@@ -1,9 +1,13 @@
 # Calendar Application
 
 ## Overview
+This is Assignment6 , iterating upon the previous assignments, which has now added new GUI elements using JAVA Swing to interact and use the calendar application.
 This Calendar application provides an I/O interface that enables users to create and manage their personal scheduling system. The application supports both interactive and headless operation modes, allowing for manual input or batch processing of commands. Key features include support for multiple calendars, timezone management, and conflict resolution.
 
 ## Operation Modes
+
+### GUI
+In this mode, users can now have an interactive experience 
 
 ### Interactive Mode
 In this mode, users can manually input commands to build and manage their calendar. Users can return to mode selection by entering the `mode` command, or exit the application with the `exit` command.
@@ -153,10 +157,13 @@ Displays "busy" if events are scheduled at the specified date and time in the ac
 ## Execution Instructions
 
 ### Without JAR
-1. Run the Interpreter main class
-2. Select an operation mode:
+1. Run the Main class
+2. Default option will run the GUI.
+3. Can be switched to Command Line(IDE Terminal) from the switch to CLI button.
+4. Select an operation mode in Command line:
     - Interactive: For manual command input
     - Headless: For processing commands from a text file
+    - GUI: Which returns back to the gui by opening a new window
     - Exit: To terminate the application
 
 For headless mode, the command file should be placed in the project root directory or specified with an absolute path.
@@ -164,22 +171,27 @@ For headless mode, the command file should be placed in the project root directo
 ### With JAR
 Run the following command in order to run the JAR file. Please make sure to create an artifact at first.
 ```
- java -jar NameOfJARFile.jar 
+ "java -jar NameOfJARFile.jar"  - to access the GUI
 ```
-
+```
+ "java -jar NameOfJARFile.jar --mode headless path-of-script-file"  - to access headless mode
+```
+```
+ "java -jar NameOfJARFile.jar --mode interactive"  - to access interactive mode
+```
 ## New Design Changes
 - Separate and organize the programs into different modules, align with the MVC design: view, controller, manager and model.
 - View: Interpreter class still has the responsibility of managing the I/O operations.
 - Controller: Command Controller is still handling the parsing for each command and map it to the correct function call.
 - Manager:
-  - Calendar Manager: A new manager for calendar operations to include the logic for each command.
-  - Event Manager: A new class separate from the old Calendar class to solely manage the event operations, including every logic for event commands.
-  - Adding interfaces for each manager class for better documentations.
-- Model: All models for Events still remain the same with minor name changes. Adding interface and class implementation for Calendar to support new model. 
+    - Calendar Manager: A new manager for calendar operations to include the logic for each command.
+    - Event Manager: A new class separate from the old Calendar class to solely manage the event operations, including every logic for event commands.
+    - Adding interfaces for each manager class for better documentations.
+- Model: All models for Events still remain the same with minor name changes. Adding interface and class implementation for Calendar to support new model.
 - Utils: New Package for utility functions, dedicated for each domain:
-  - Date Time Utils: Manage utilities functions for converting date time objects or changing time zone.
-  - Event Utils: Utilities functions for events domain, specifically the conflict management.
-  - Export Utils: Utilities function for exporting, including function to convert the name to suitable type for CSV export.
+    - Date Time Utils: Manage utilities functions for converting date time objects or changing time zone.
+    - Event Utils: Utilities functions for events domain, specifically the conflict management.
+    - Export Utils: Utilities function for exporting, including function to convert the name to suitable type for CSV export.
 - Add more unit tests to cover edge case.
 
 ## Work distributions
